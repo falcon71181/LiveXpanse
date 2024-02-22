@@ -1,0 +1,38 @@
+{
+  "name": "livexpanse",
+  "version": "1.0.0",
+  "description": "twitch livestreaming live streaming chat socket",
+  "main": "server.js",
+  "scripts": {
+    "dev": "npx nodemon",
+    "start": "npm run build && node build/server.js",
+    "build": "rimraf ./build && tsc",
+    "vercel-build": "echo building"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/falcon71181/LiveXpanse.git"
+  },
+  "keywords": [
+    "twitch",
+    "live",
+    "streaming",
+    "livestreaming",
+    "chat",
+    "livechat",
+    "socket"
+  ],
+  "author": "falcon71181",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/falcon71181/LiveXpanse/issues"
+  },
+  "homepage": "https://github.com/falcon71181/LiveXpanse#readme",
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.19",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "rimraf": "^5.0.5"
+  }
+}
