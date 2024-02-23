@@ -16,3 +16,5 @@ app.get("/health", (_req, res) => {
 app.listen(SERVER_PORT, () => {
   console.log(`Server is running on : ${SERVER_PORT}`);
 });
+
+export default app;
