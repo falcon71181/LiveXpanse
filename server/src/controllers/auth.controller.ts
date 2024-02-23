@@ -1,9 +1,66 @@
-import { RequestHandler, Request, Response } from "express";
 import { createTable } from "../database/users";
 import { pool } from "../database/db";
-import { QueryResult } from "pg";
-import bcrypt from "bcrypt";
+import bcrypt, { compare } from "bcrypt";
+import type { RequestHandler, Request, Response } from "express";
+import type { QueryResult } from "pg";
 
+const loginUser: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    console.log(req.body);
+    let { email, password } = req.body;
+
+    // Trim whitespace from inputs
+    const trimmedEmail: string = email.trim();
+    const trimmedPassword: string = password.trim();
+
+    // Check for missing fields
+    if (!trimmedEmail || !trimmedPassword) {
+      return res
+        .status(400)
+        .send({ error: "Please provide email and password." });
+    }
+
+    // Validate email format
+    const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      return res.status(400).send({ error: "Invalid email format." });
+    }
+
+    // Ensure table exists in database
+    await createTable();
+
+    // Check if user exists
+    const existingUser: QueryResult = await pool.query(
+      "SELECT * FROM users WHERE email = $1",
+      [trimmedEmail],
+    );
+    console.log(existingUser);
+
+    if (existingUser.rows.length === 0) {
+      return res.status(404).send({ error: "User not found." });
+    }
+
+    const user = existingUser.rows[0];
+
+    // Compare passwords
+    const isPasswordCorrect: boolean = await compare(
+      trimmedPassword,
+      user.password,
+    );
+
+    if (!isPasswordCorrect) {
+      return res.status(401).send({ error: "Incorrect password." });
+    }
+
+    // Login successful
+    return res.status(200).send({ username: user.username });
+  } catch (error) {
+    console.error("Error logging in:", error);
+    return res.status(500).send({ error: "Internal server error." });
+  }
+};
+
+// User Registration
 const registerUser: RequestHandler = async (req: Request, res: Response) => {
   console.log(req.body);
   let { username, email, password, confirmPassword } = req.body;
@@ -40,8 +97,8 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
 
     // Check for already existing user
     const existingUser: QueryResult = await pool.query(
-      "SELECT * FROM users WHERE username = $1",
-      [username],
+      "SELECT * FROM users WHERE email = $1",
+      [email],
     );
 
     if (existingUser.rows.length > 0) {
@@ -67,4 +124,4 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
-export { registerUser };
+export { loginUser, registerUser };
