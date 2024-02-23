@@ -29,8 +29,11 @@
   },
   "homepage": "https://github.com/falcon71181/LiveXpanse#readme",
   "dependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.19",
+    "@types/pg": "^8.11.0",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "express": "^4.18.2",
     "pg": "^8.11.3",

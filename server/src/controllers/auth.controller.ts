@@ -1,9 +1,11 @@
 import { RequestHandler, Request, Response } from "express";
 import { createTable } from "../database/users";
 import { pool } from "../database/db";
+import { QueryResult } from "pg";
 import bcrypt from "bcrypt";
 
 const registerUser: RequestHandler = async (req: Request, res: Response) => {
+  console.log(req.body);
   let { username, email, password, confirmPassword } = req.body;
 
   // Trim whitespace from inputs
@@ -37,7 +39,7 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
     await createTable();
 
     // Check for already existing user
-    const existingUser = await pool.query(
+    const existingUser: QueryResult = await pool.query(
       "SELECT * FROM users WHERE username = $1",
       [username],
     );
@@ -48,7 +50,7 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
     }
 
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword: string = await bcrypt.hash(password, 12);
 
     // Insert user into database
     await pool.query(

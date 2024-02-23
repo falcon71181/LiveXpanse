@@ -10,6 +10,9 @@ const SERVER_PORT = process.env.SERVER_PORT || 3333;
 
 const app = express();
 
+// Middlewares
+app.use(express.json());
+
 // Health Check API Route
 app.get("/health", (_req, res) => {
   res.sendStatus(200);
