@@ -1,12 +1,13 @@
 import { createTable } from "../database/users";
 import { pool } from "../database/db";
 import bcrypt, { compare } from "bcrypt";
+import { createToken } from "../utils/token";
 import type { RequestHandler, Request, Response } from "express";
 import type { QueryResult } from "pg";
 
+// User Login
 const loginUser: RequestHandler = async (req: Request, res: Response) => {
   try {
-    console.log(req.body);
     let { email, password } = req.body;
 
     // Trim whitespace from inputs
@@ -34,7 +35,6 @@ const loginUser: RequestHandler = async (req: Request, res: Response) => {
       "SELECT * FROM users WHERE email = $1",
       [trimmedEmail],
     );
-    console.log(existingUser);
 
     if (existingUser.rows.length === 0) {
       return res.status(404).send({ error: "User not found." });
@@ -52,8 +52,11 @@ const loginUser: RequestHandler = async (req: Request, res: Response) => {
       return res.status(401).send({ error: "Incorrect password." });
     }
 
+    // create jwt token
+    const token: string = createToken(user.email);
+
     // Login successful
-    return res.status(200).send({ username: user.username });
+    return res.status(200).send({ username: user.username, token: token });
   } catch (error) {
     console.error("Error logging in:", error);
     return res.status(500).send({ error: "Internal server error." });
@@ -62,7 +65,6 @@ const loginUser: RequestHandler = async (req: Request, res: Response) => {
 
 // User Registration
 const registerUser: RequestHandler = async (req: Request, res: Response) => {
-  console.log(req.body);
   let { username, email, password, confirmPassword } = req.body;
 
   // Trim whitespace from inputs
@@ -115,8 +117,13 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
       [username, email, hashedPassword],
     );
 
+    //  create jwt token
+    const token: string = createToken(email);
+
     // Send success response
-    res.status(200).send({ message: "User registered successfully." });
+    res
+      .status(200)
+      .send({ message: "User registered successfully.", token: token });
   } catch (error) {
     // Handle errors
     console.error("Error registering user:", error);
