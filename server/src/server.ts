@@ -23,8 +23,14 @@ const io = new Server(httpServer, {
   },
 });
 
+// CORS Options
+const corsOptions = {
+  origin: (process.env?.ALLOWED_ORIGIN || "http://localhost:3333").split(","),
+  methods: (process.env?.ALLOWED_METHODS || "GET", "POST").split(","),
+};
+
 // Middlewares
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Health Check API Route
