@@ -1,14 +1,23 @@
 import Logo from "../../public/logo.png";
 import { siteName } from "../config/WebSite";
 import { FaRegUser } from "react-icons/fa";
+import { AiOutlineGlobal } from "react-icons/ai";
 
 const NavBar = () => {
+  // acuire the pathname to do conditional styling based on pages
+  const pathname = window.location.pathname;
+  console.log(pathname);
+
   return (
     <main className="px-5 bg-[#151E27] fixed h-12 w-full flex items-center justify-between border-2 border-blue-500">
-      <section className="flex">
-        <a href="/" className="flex items-center gap-3">
+      <section className="flex items-center gap-3">
+        <a href="/" className="mr-5 flex items-center gap-3">
           <img src={Logo} className="h-8 w-8"></img>
           <h1 className="text-lg text-[#8D65DE] font-extrabold">{siteName}</h1>
+        </a>
+        <a href="/chat" className={getNavLinkClasses(pathname, "/contact")}>
+          <AiOutlineGlobal />
+          <h1 className="text-sm font-semibold">Chat</h1>
         </a>
         {/* Add More Nav Options here */}
       </section>
@@ -52,5 +61,13 @@ const NavBar = () => {
     </main>
   );
 };
+
+// Helper function to determine NavLink classes
+const getNavLinkClasses = (currentPath: string, targetPath: string) =>
+  `${
+    currentPath === targetPath
+      ? "text-grny"
+      : "text-stone-300 hover:text-[#a970ff]"
+  } h-7 w-14 flex gap-1 justify-center items-center text-slate-300`;
 
 export default NavBar;

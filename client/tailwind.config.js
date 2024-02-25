@@ -9,6 +9,10 @@ export default {
   ],
   theme: {
     extend: {
+      colors: {
+        saffron: "#fa4103",
+        grny: "#8cff00",
+      },
       screens: {
         tablet: "640px",
         navHide: "800px",
