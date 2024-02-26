@@ -42,5 +42,9 @@
     "pg": "^8.11.3",
     "rimraf": "^5.0.5",
     "socket.io": "^4.7.4"
+  },
+  "devDependencies": {
+    "@types/nodemon": "^1.19.6",
+    "nodemon": "^3.1.0"
   }
 }
