@@ -8,7 +8,6 @@ import { user_routes } from "./routes/users";
 import { Server } from "socket.io";
 import { createServer } from "http";
 
-
 // port for server
 const SERVER_PORT = process.env.SERVER_PORT || 3333;
 // port of client app
@@ -51,13 +50,12 @@ app.use("/users", user_routes);
 io.on("connection", (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
-  socket.on("message", (messageData) => {
-    io.emit("message", messageData);
+  socket.on("sent-message", (messageData) => {
+    io.emit("received-message", messageData);
   });
 
-  socket.on('disconnect', () => {
-    console.log('🔥: A user disconnected');
-
+  socket.on("disconnect", () => {
+    console.log(`🔥: ${socket.id} user just disconnected`);
   });
 });
 

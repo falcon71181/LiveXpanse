@@ -21,7 +21,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
   };
 
   return (
-    <div className="h-16 w-[99.6vw] p-3 absolute bottom-0 bg-[#162536]">
+    <div className="h-16 w-[99.6vw] p-3 bg-[#162536]">
       <form onSubmit={handleSendMessage} className="relative w-full">
         <input
           className="h-full w-full rounded-md px-3 py-2 outline-none text-sm text-white bg-[#151E27]"
