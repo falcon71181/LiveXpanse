@@ -9,7 +9,7 @@ const NavBar = () => {
   console.log(pathname);
 
   return (
-    <main className="px-5 bg-[#151E27] fixed h-12 w-full flex items-center justify-between border-2 border-blue-500">
+    <main className="px-5 bg-[#151E27] fixed h-12 w-full flex items-center justify-between z-50 border-2 border-blue-500">
       <section className="flex items-center gap-3">
         <a href="/" className="mr-5 flex items-center gap-3">
           <img src={Logo} className="h-8 w-8"></img>
@@ -64,10 +64,9 @@ const NavBar = () => {
 
 // Helper function to determine NavLink classes
 const getNavLinkClasses = (currentPath: string, targetPath: string) =>
-  `${
-    currentPath === targetPath
-      ? "text-grny"
-      : "text-stone-300 hover:text-[#a970ff]"
+  `${currentPath === targetPath
+    ? "text-grny"
+    : "text-stone-300 hover:text-[#a970ff]"
   } h-7 w-14 flex gap-1 justify-center items-center text-slate-300`;
 
 export default NavBar;
