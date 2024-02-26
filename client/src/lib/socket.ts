@@ -1,6 +1,6 @@
-import io from "socket.io-client";
+import { io } from 'socket.io-client';
 
-// importing env sercer
+// importing env server
 const SERVER = import.meta.env.VITE_SERVER ?? "http://localhost:3333";
 console.log(SERVER);
 

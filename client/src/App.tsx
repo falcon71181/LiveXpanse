@@ -1,10 +1,17 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import GlobalChat from "./pages/GlobalChat";
+import RootPage from "./pages/RootPage";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
-  return <main className="mt-12">Main Page</main>;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<RootPage />} />
+        <Route path="/chat" element={<GlobalChat />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
