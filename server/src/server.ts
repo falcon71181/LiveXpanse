@@ -1,12 +1,13 @@
-import { config } from "dotenv";
+import * as dotenv from "dotenv";
+// to read DotEnv file variables
+dotenv.config();
+
 import cors from "cors";
 import express from "express";
 import { user_routes } from "./routes/users";
 import { Server } from "socket.io";
 import { createServer } from "http";
 
-// to read DotEnv file variables
-config();
 
 // port for server
 const SERVER_PORT = process.env.SERVER_PORT || 3333;
@@ -55,14 +56,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on('disconnect', () => {
-
     console.log('🔥: A user disconnected');
 
   });
 });
 
 // Starting Server with SERVER_PORT
-app.listen(SERVER_PORT, () => {
+httpServer.listen(SERVER_PORT, () => {
   console.log(`Server is running on : ${SERVER_PORT}`);
 });
 
