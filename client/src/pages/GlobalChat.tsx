@@ -1,10 +1,9 @@
-"use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import MessageInput from "../components/GlobalChat/MessageInput";
-import { socket } from "../lib/socket";
+import socket from "../lib/socket";
 
-const GlobalChat: React.FC = () => {
-  const [isConnected, setIsConnected] = useState<boolean>(false);
+const GlobalChat = () => {
+  const [isConnected, setIsConnected] = useState(socket.connected);
   const [messages, setMessages] = useState<any[]>([]);
 
   const handleSentMessage = (message: string) => {
@@ -52,12 +51,12 @@ const GlobalChat: React.FC = () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("receive-message", onReceiveMessage);
-    };
-  }, []);
+    }
+  }, [])
 
   return (
     <main className="pt-20 w-full h-full z-10">
-      {isConnected && <div>connected</div>}
+      {isConnected && <div className='text-red-500'>connected</div>}
       <MessageInput onSendMessage={handleSentMessage} />
     </main>
   );

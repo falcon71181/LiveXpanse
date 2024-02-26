@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 
 interface MessageInputProps {
@@ -31,13 +30,11 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
           onChange={(e) => setInputData(e.target.value)}
         />
         <svg
-          className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+          className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer h-[1.6rem] w-[1.6rem]"
           stroke="currentColor"
           fill="currentColor"
           strokeWidth="0"
           viewBox="0 0 512 512"
-          height="1.6rem"
-          width="1.6rem"
           xmlns="http://www.w3.org/2000/svg"
           onClick={handleSendMessage}
         >
