@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 
 interface MessageInputProps {
@@ -22,7 +21,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
   };
 
   return (
-    <div className="h-16 w-[99.6vw] p-3 absolute bottom-0 bg-[#162536]">
+    <div className="h-16 w-[99.6vw] p-3 bg-[#162536]">
       <form onSubmit={handleSendMessage} className="relative w-full">
         <input
           className="h-full w-full rounded-md px-3 py-2 outline-none text-sm text-white bg-[#151E27]"
@@ -31,13 +30,11 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
           onChange={(e) => setInputData(e.target.value)}
         />
         <svg
-          className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+          className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer h-[1.6rem] w-[1.6rem]"
           stroke="currentColor"
           fill="currentColor"
           strokeWidth="0"
           viewBox="0 0 512 512"
-          height="1.6rem"
-          width="1.6rem"
           xmlns="http://www.w3.org/2000/svg"
           onClick={handleSendMessage}
         >

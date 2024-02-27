@@ -1,63 +1,77 @@
-"use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import MessageInput from "../components/GlobalChat/MessageInput";
-import { socket } from "../lib/socket";
+import MessagesLogs from "../components/GlobalChat/Messages";
+import socket from "../lib/socket";
+import { Message, MessageData } from "../types/GlobalChat";
 
-const GlobalChat: React.FC = () => {
-  const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [messages, setMessages] = useState<any[]>([]);
+const GlobalChat = () => {
+  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [messages, setMessages] = useState<Message[]>([]);
 
+  // handle sent-message data {}
   const handleSentMessage = (message: string) => {
-    const newSentMessage = {
+    // TODO add user data in Message {}
+    const newSentMessage: Message = {
       type: "sent",
-      data: message,
+      data: {
+        socketId: socket.id,
+        message: message,
+      },
     };
 
     setMessages((prevMessages) => {
       return [...prevMessages, newSentMessage];
     });
 
-    socket.emit("send-message", message);
+    console.log("client side emitting messages");
+    socket.emit("sent-message", newSentMessage.data);
+  };
+
+  // handle received-message data {}
+  const handleReceivedMessage = (data: MessageData) => {
+    const newReceivedMessage: Message = {
+      type: "received",
+      data: data,
+    };
+
+    setMessages((prevMessages) => {
+      return [...prevMessages, newReceivedMessage];
+    });
   };
 
   useEffect(() => {
     const onConnect = () => {
-      console.log("connected");
       setIsConnected(true);
     };
 
     const onDisconnect = () => {
-      console.log("disconnected");
       setIsConnected(false);
     };
 
-    const onReceiveMessage = (message: string) => {
-      const newReceivedMessage = {
-        type: "received",
-        data: message,
-      };
-
-      setMessages((prevMessages) => {
-        return [...prevMessages, newReceivedMessage];
-      });
+    const onReceiveMessage = (data: MessageData) => {
+      // to not print back the sent-message as received-message
+      if (data.socketId === socket.id) return;
+      handleReceivedMessage(data);
     };
 
     // events
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
-    socket.on("receive-message", onReceiveMessage);
+    socket.on("received-message", onReceiveMessage);
 
     return () => {
       // Clean up by removing event listeners
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
-      socket.off("receive-message", onReceiveMessage);
+      socket.off("received-message", onReceiveMessage);
     };
   }, []);
 
   return (
-    <main className="pt-20 w-full h-full z-10">
-      {isConnected && <div>connected</div>}
+    <main className="pt-14 w-full h-full z-10">
+      <div className="w-full h-[80vh] overflow-y-auto bg-[#162536] border-2 border-yellow-500">
+        <MessagesLogs messages={messages} />
+      </div>
       <MessageInput onSendMessage={handleSentMessage} />
     </main>
   );
