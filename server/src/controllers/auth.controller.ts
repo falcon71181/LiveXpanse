@@ -32,7 +32,7 @@ const loginUser: RequestHandler = async (req: Request, res: Response) => {
 
     // Check if user exists
     const existingUser: QueryResult = await pool.query(
-      "SELECT * FROM users WHERE email = $1",
+      "SELECT * FROM users WHERE user_email = $1",
       [trimmedEmail],
     );
 
@@ -45,7 +45,7 @@ const loginUser: RequestHandler = async (req: Request, res: Response) => {
     // Compare passwords
     const isPasswordCorrect: boolean = await compare(
       trimmedPassword,
-      user.password,
+      user.user_password,
     );
 
     if (!isPasswordCorrect) {
@@ -53,10 +53,10 @@ const loginUser: RequestHandler = async (req: Request, res: Response) => {
     }
 
     // create jwt token
-    const token: string = createToken(user.email);
+    const token: string = createToken(user.user_email);
 
     // Login successful
-    return res.status(200).send({ username: user.username, token: token });
+    return res.status(200).send({ username: user.user_username, token: token });
   } catch (error) {
     console.error("Error logging in:", error);
     return res.status(500).send({ error: "Internal server error." });
@@ -99,7 +99,7 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
 
     // Check for already existing user
     const existingUser: QueryResult = await pool.query(
-      "SELECT * FROM users WHERE email = $1",
+      "SELECT * FROM users WHERE user_email = $1",
       [email],
     );
 
@@ -113,7 +113,7 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
 
     // Insert user into database
     await pool.query(
-      "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)",
+      "INSERT INTO users (user_username, user_email, user_password) VALUES ($1, $2, $3)",
       [username, email, hashedPassword],
     );
 
