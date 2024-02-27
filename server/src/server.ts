@@ -5,6 +5,7 @@ dotenv.config();
 import cors from "cors";
 import express from "express";
 import { user_routes } from "./routes/users";
+import { thread_routes } from "./routes/threads";
 import { Server } from "socket.io";
 import { createServer } from "http";
 
@@ -39,12 +40,15 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Health Check API Route
-app.get("/health", (_req, res) => {
+app.get("/hearth", (_req, res) => {
   res.sendStatus(200);
 });
 
 // User Login & Register routes
 app.use("/users", user_routes);
+
+// Thread create routes
+app.use("/threads", thread_routes);
 
 // Socket.IO event handlers
 io.on("connection", (socket) => {
