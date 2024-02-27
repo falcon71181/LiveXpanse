@@ -2,29 +2,36 @@ import { useState, useEffect } from "react";
 import MessageInput from "../components/GlobalChat/MessageInput";
 import MessagesLogs from "../components/GlobalChat/Messages";
 import socket from "../lib/socket";
+import { Message, MessageData } from "../types/GlobalChat";
 
 const GlobalChat = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
+  // handle sent-message data {}
   const handleSentMessage = (message: string) => {
-    const newSentMessage = {
+    // TODO add user data in Message {}
+    const newSentMessage: Message = {
       type: "sent",
-      data: message,
+      data: {
+        socketId: socket.id,
+        message: message,
+      },
     };
 
     setMessages((prevMessages) => {
       return [...prevMessages, newSentMessage];
     });
 
-    console.log("client side eminting messages");
-    socket.emit("sent-message", message);
+    console.log("client side emitting messages");
+    socket.emit("sent-message", newSentMessage.data);
   };
 
-  const handleReceivedMessage = (message: string) => {
-    const newReceivedMessage = {
+  // handle received-message data {}
+  const handleReceivedMessage = (data: MessageData) => {
+    const newReceivedMessage: Message = {
       type: "received",
-      data: message,
+      data: data,
     };
 
     setMessages((prevMessages) => {
@@ -41,9 +48,10 @@ const GlobalChat = () => {
       setIsConnected(false);
     };
 
-    const onReceiveMessage = (message: string) => {
-      console.log("client side rec");
-      handleReceivedMessage(message);
+    const onReceiveMessage = (data: MessageData) => {
+      // to not print back the sent-message as received-message
+      if (data.socketId === socket.id) return;
+      handleReceivedMessage(data);
     };
 
     // events
