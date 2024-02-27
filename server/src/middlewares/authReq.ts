@@ -37,7 +37,7 @@ export const isAuth = async (
 
     // Query database to find user by email
     const user: QueryResult = await pool.query(
-      `SELECT * FROM users WHERE username = $1`,
+      `SELECT * FROM users WHERE user_email = $1`,
       [email],
     );
 
