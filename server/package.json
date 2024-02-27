@@ -5,9 +5,13 @@
   "main": "server.js",
   "scripts": {
     "dev": "npx nodemon",
-    "start": "npm run build && node build/server.js",
-    "build": "rimraf ./build && tsc",
-    "vercel-build": "echo building"
+    "start": "node ./build/server.js",
+    "build": "rimraf ./build && npx tsc",
+    "vercel-build": "echo building",
+    "docker:fetch": "(docker rmi livexpanse-server && npm run docker:build) || npm run docker:build",
+    "docker:build": "docker build -t livexpanse-server .",
+    "docker:start": "docker start livexpanse-server || docker run -d --name livexpanse-server -p 3333:3333 livexpanse-server",
+    "docker:stop": "docker stop livexpanse-server"
   },
   "repository": {
     "type": "git",
@@ -45,6 +49,7 @@
   },
   "devDependencies": {
     "@types/nodemon": "^1.19.6",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "typescript": "^5.3.3"
   }
 }
