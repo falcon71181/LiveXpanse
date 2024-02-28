@@ -40,7 +40,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Health Check API Route
-app.get("/hearth", (_req, res) => {
+app.get("/health", (_req, res) => {
   res.sendStatus(200);
 });
 
