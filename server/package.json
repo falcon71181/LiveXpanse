@@ -10,8 +10,8 @@
     "vercel-build": "echo building",
     "docker:fetch": "(docker rmi livexpanse-server && npm run docker:build) || npm run docker:build",
     "docker:build": "docker build -t livexpanse-server .",
-    "docker:start": "docker start livexpanse-server || docker run -d --name livexpanse-server -p 3333:3333 livexpanse-server",
-    "docker:stop": "docker stop livexpanse-server"
+    "docker:start": "docker start livexpanse-server-con || docker run -d --name livexpanse-server-con -p 3333:3333 livexpanse-server",
+    "docker:stop": "docker stop livexpanse-server-con"
   },
   "repository": {
     "type": "git",
