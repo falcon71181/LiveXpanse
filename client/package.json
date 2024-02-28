@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docker:fetch": "(docker rmi livexpanse-client && npm run docker:build) || npm run docker:build",
+    "docker:build": "docker build -t livexpanse-client .",
+    "docker:start": "docker start livexpanse-client-con || docker run -d --name livexpanse-client-con -p 4173:4173 livexpanse-client",
+    "docker:stop": "docker stop livexpanse-client-con"
   },
   "dependencies": {
     "react": "^18.2.0",
