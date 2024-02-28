@@ -1,4 +1,4 @@
-import { creatTable } from "../database/threads";
+import { createTable } from "../database/threads";
 import { pool } from "../database/db";
 import type { RequestHandler, Request, Response } from "express";
 import type { QueryResult } from "pg";
@@ -31,7 +31,7 @@ const createThread: RequestHandler = async (req: Request, res: Response) => {
     const trimmedMessage: string = message.trim();
 
     // wait for table to be created
-    await creatTable();
+    await createTable();
 
     // inserting thread data into table threads
     await pool.query(

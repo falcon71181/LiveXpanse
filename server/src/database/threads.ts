@@ -1,6 +1,6 @@
 import { pool } from "./db";
 
-export const creatTable = async () => {
+export const createTable = async () => {
   try {
     await pool.query(`CREATE TABLE IF NOT EXISTS threads (
             thread_id SERIAL PRIMARY KEY,
