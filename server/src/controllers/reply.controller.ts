@@ -7,7 +7,7 @@ import type { QueryResult } from "pg";
 const createReply: RequestHandler = async (req: Request, res: Response) => {
   try {
     let { reply } = req.body;
-    let thread_id = req.params.thread_id;
+    let thread_id = req.params.threadId;
 
     // Check if the reply exceeds the limit of 1000 characters
     if (reply.length > 1000) {
@@ -35,7 +35,7 @@ const createReply: RequestHandler = async (req: Request, res: Response) => {
 
     // Inserting reply data into replies table
     await pool.query(
-      "INSERT INTO replies (thread_id, replier_user_id, reply_message) VALUES ($1, $2)",
+      "INSERT INTO replies (thread_id, replier_user_id, reply_message) VALUES ($1, $2, $3)",
       [thread_id, user_id, trimmedReply],
     );
 
