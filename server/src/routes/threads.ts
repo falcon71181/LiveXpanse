@@ -10,6 +10,6 @@ const router: IRouter = Router();
 router.post("/create", isAuth, createThread);
 
 // threads/reply/:thread_Id
-router.post("/reply/:thread_Id", isAuth, createReply);
+router.post("/reply/:threadId", isAuth, createReply);
 
 export { router as thread_routes };
