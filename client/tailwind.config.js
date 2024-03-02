@@ -10,6 +10,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        background_dark: "#162536",
         saffron: "#fa4103",
         grny: "#8cff00",
       },
