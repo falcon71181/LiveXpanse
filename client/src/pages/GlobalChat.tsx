@@ -68,14 +68,20 @@ const GlobalChat = () => {
   }, []);
 
   return (
-    <main className="pt-14 w-full h-full z-10">
-      {isConnected && <h1>Some error occured: Couldn't connect to socker server</h1>}
+    <main className="pt-14 w-full min-h-screen z-10">
+      {!isConnected && (
+        <h1 className="text-white">
+          ERROR: Some error occured: Couldn't connect to socker server
+        </h1>
+      )}
       {isConnected && (
-        <div className="w-full h-[80vh] overflow-y-auto bg-[#162536] border-2 border-yellow-500">
+        <div className="w-full h-[80vh] overflow-y-auto border-2 border-yellow-500">
           <MessagesLogs messages={messages} />
         </div>
       )}
-      <MessageInput onSendMessage={handleSentMessage} />
+      <div className="absolute bottom-0">
+        <MessageInput onSendMessage={handleSentMessage} />
+      </div>
     </main>
   );
 };
