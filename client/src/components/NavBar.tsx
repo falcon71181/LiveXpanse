@@ -45,13 +45,13 @@ const NavBar = () => {
       </section>
       <section className="flex items-center gap-3">
         <Link
-          to="/"
+          to="/login"
           className="h-7 w-14 bg-[#263846] hover:bg-[#363846] rounded flex justify-center items-center text-slate-300 hover:text-white"
         >
           <h1 className="text-sm font-semibold">Log In</h1>
         </Link>
         <Link
-          to="/"
+          to="/register"
           className="h-7 w-[4.2rem] bg-[#30146D] hover:bg-[#451B9E] rounded flex justify-center items-center text-slate-300 hover:text-white"
         >
           <h1 className="text-sm font-semibold">Sign Up</h1>
@@ -64,9 +64,10 @@ const NavBar = () => {
 
 // Helper function to determine NavLink classes
 const getNavLinkClasses = (currentPath: string, targetPath: string) =>
-  `${currentPath === targetPath
-    ? "text-grny"
-    : "text-stone-300 hover:text-[#a970ff]"
+  `${
+    currentPath === targetPath
+      ? "text-grny"
+      : "text-stone-300 hover:text-[#a970ff]"
   } h-7 w-14 flex gap-1 justify-center items-center text-slate-300`;
 
 export default NavBar;

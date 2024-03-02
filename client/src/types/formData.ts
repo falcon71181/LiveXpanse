@@ -5,6 +5,6 @@ type RegisterFormData = {
   confirmPassword: string;
 };
 
-type LoginFormData = Omit<RegisterFormData, "confirmPassword" & "username">;
+type LoginFormData = Omit<RegisterFormData, "confirmPassword" | "username">;
 
 export type { RegisterFormData, LoginFormData };

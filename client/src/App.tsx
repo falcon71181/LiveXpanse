@@ -3,6 +3,7 @@ import GlobalChat from "./pages/GlobalChat";
 import RootPage from "./pages/RootPage";
 import Rules from "./pages/Rules";
 import Register from "./pages/Register";
+import Login from "./pages/Login";
 import { Route, Routes } from "react-router-dom";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       <Route path="/chat" element={<GlobalChat />} />
       <Route path="/rules" element={<Rules />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
     </Routes>
   );
 }
