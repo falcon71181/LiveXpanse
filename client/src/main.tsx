@@ -10,7 +10,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <main className="min-h-screen w-screen flex">
         <NavBar />
-        <App />
+        <div className="bg-background_dark">
+          <App />
+        </div>
       </main>
     </BrowserRouter>
   </React.StrictMode>,
