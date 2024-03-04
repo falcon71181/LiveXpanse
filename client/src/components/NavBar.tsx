@@ -1,23 +1,57 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Logo from "../assets/logo.png";
 import { siteName } from "../config/WebSite";
 import { FaRegUser } from "react-icons/fa";
+import { FaClipboardQuestion } from "react-icons/fa6";
 import { AiOutlineGlobal } from "react-icons/ai";
+import { MdForum } from "react-icons/md";
 
 const NavBar = () => {
-  // acuire the pathname to do conditional styling based on pages
-  const pathname = window.location.pathname;
+  const location = useLocation();
 
   return (
-    <main className="px-5 bg-[#151E27] fixed h-12 w-full flex items-center justify-between z-50 border-2 border-blue-500">
+    <main className="px-8 bg-[#151E27] fixed h-12 w-full flex items-center justify-between z-50 border-b-[1px] border-blue-500">
       <section className="flex items-center gap-3">
         <Link to="/" className="mr-5 flex items-center gap-3">
-          <img src={Logo} className="h-8 w-8"></img>
-          <h1 className="text-lg text-[#8D65DE] font-extrabold">{siteName}</h1>
+          <img src={Logo} className="h-8 w-8" alt="Logo"></img>
+          <h1 className="text-lg text-[#8D65DE] font-extrabold tracking-widest">
+            {siteName}
+          </h1>
         </Link>
-        <Link to="/chat" className={getNavLinkClasses(pathname, "/contact")}>
-          <AiOutlineGlobal />
-          <h1 className="text-sm font-semibold">Chat</h1>
+        <Link
+          to="/chat"
+          className={`${
+            location.pathname === "/chat" ? "text-[#a970ff]" : "text-stone-300"
+          } mx-4 hover:text-[#a970ff] w-14 flex gap-1 justify-center items-center`}
+        >
+          <div className="flex items-center justify-center gap-2">
+            <AiOutlineGlobal />
+            <h1 className="text-sm font-semibold">Chat</h1>
+          </div>
+        </Link>
+        <Link
+          to="/community"
+          className={`${
+            location.pathname === "/community"
+              ? "text-[#a970ff]"
+              : "text-stone-300"
+          } mx-4 hover:text-[#a970ff] h-7 w-14 flex gap-1 justify-center items-center`}
+        >
+          <div className="flex items-center gap-2">
+            <MdForum />
+            <h1 className="text-sm font-semibold">Community</h1>
+          </div>
+        </Link>
+        <Link
+          to="/rules"
+          className={`${
+            location.pathname === "/rules" ? "text-[#a970ff]" : "text-stone-300"
+          } mx-4 hover:text-[#a970ff] w-14 flex gap-1 justify-center items-center`}
+        >
+          <div className="flex items-center justify-center gap-2">
+            <FaClipboardQuestion />
+            <h1 className="text-sm font-semibold">Rules</h1>
+          </div>
         </Link>
         {/* Add More Nav Options here */}
       </section>
@@ -26,7 +60,7 @@ const NavBar = () => {
         <input
           type="text"
           name="text"
-          className="input text-[#f7f7f8] mr-[1px] p-[10px] outline-none w-64 h-full bg-[#151E27] transition-all duration-200 ease rounded-l border-[1px] border-white focus:border-[2px] focus:border-[#a970ff] focus:bg-[#0e0e10]"
+          className="input text-[#f7f7f8] mr-[1px] p-[10px] outline-none w-72 h-full bg-[#151E27] transition-all duration-200 ease rounded-l border-[1px] border-white focus:border-[2px] focus:border-[#a970ff] focus:bg-[#0e0e10]"
           placeholder="Search"
         ></input>
         <button className="h-full bg-gray-800 rounded-r-lg flex items-center justify-center w-10 cursor-pointer hover:bg-gray-50">
@@ -56,18 +90,10 @@ const NavBar = () => {
         >
           <h1 className="text-sm font-semibold">Sign Up</h1>
         </Link>
-        <FaRegUser />
+        <FaRegUser color="white" />
       </section>
     </main>
   );
 };
-
-// Helper function to determine NavLink classes
-const getNavLinkClasses = (currentPath: string, targetPath: string) =>
-  `${
-    currentPath === targetPath
-      ? "text-grny"
-      : "text-stone-300 hover:text-[#a970ff]"
-  } h-7 w-14 flex gap-1 justify-center items-center text-slate-300`;
 
 export default NavBar;
