@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import Logo from "../assets/logo.png";
 import { siteName } from "../config/WebSite";
 import { FaRegUser } from "react-icons/fa";
+import { FaClipboardQuestion } from "react-icons/fa6";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { MdForum } from "react-icons/md";
 
@@ -39,6 +40,17 @@ const NavBar = () => {
           <div className="flex items-center gap-2">
             <MdForum />
             <h1 className="text-sm font-semibold">Community</h1>
+          </div>
+        </Link>
+        <Link
+          to="/rules"
+          className={`${
+            location.pathname === "/rules" ? "text-[#a970ff]" : "text-stone-300"
+          } mx-4 hover:text-[#a970ff] w-14 flex gap-1 justify-center items-center`}
+        >
+          <div className="flex items-center justify-center gap-2">
+            <FaClipboardQuestion />
+            <h1 className="text-sm font-semibold">Rules</h1>
           </div>
         </Link>
         {/* Add More Nav Options here */}

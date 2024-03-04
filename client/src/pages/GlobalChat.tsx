@@ -75,7 +75,7 @@ const GlobalChat = () => {
         </h1>
       )}
       {isConnected && (
-        <div className="w-full h-[80vh] overflow-y-auto border-2 border-yellow-500">
+        <div className="w-full h-[calc(100vh-8rem)] overflow-y-auto border-2 border-yellow-500">
           <MessagesLogs messages={messages} />
         </div>
       )}
