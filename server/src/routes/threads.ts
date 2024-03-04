@@ -1,10 +1,13 @@
 import { Router } from "express";
-import { createThread } from "../controllers/thread.controller";
+import { getThreads, createThread } from "../controllers/thread.controller";
 import { createReply, createSubReply } from "../controllers/reply.controller";
 import { isAuth } from "../middlewares/authReq";
 import type { IRouter } from "express";
 
 const router: IRouter = Router();
+
+// get all threads
+router.get("/", getThreads);
 
 // threads/create
 router.post("/create", isAuth, createThread);
