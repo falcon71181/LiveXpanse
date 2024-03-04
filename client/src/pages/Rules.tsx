@@ -2,7 +2,7 @@ import { getRules } from "../config/WebSite";
 
 const Rules = () => {
   return (
-    <div className="pt-16 w-screen min-h-[88vh] flex flex-col items-center border-2 border-red-700">
+    <div className="pt-16 w-screen min-h-[88vh] flex flex-col items-center">
       <h1 className="text-3xl font-bold text-white mb-5">General Rules</h1>
       <div className="w-5/6 h-full flex flex-col items-center pb-20">
         {getRules.map((rule, index) => (

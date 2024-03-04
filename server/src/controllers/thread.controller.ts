@@ -3,6 +3,52 @@ import { pool } from "../database/db";
 import type { RequestHandler, Request, Response } from "express";
 import type { QueryResult } from "pg";
 
+type threadInfo = {
+  leader: string;
+  title: string;
+  message: string;
+};
+// get all thread info
+const getThreads: RequestHandler = async (_req: Request, res: Response) => {
+  try {
+    // fetching threads from table threads
+    const threads: QueryResult = await pool.query("SELECT * FROM threads");
+
+    // Create an empty array to store the objects
+    const threadsData = [];
+
+    // Iterate through each row in the threads result
+    for (const thread of threads.rows) {
+      // fetching username using user_id
+      let data = await pool.query("SELECT * FROM users WHERE user_id = $1", [
+        thread.leader_user_id,
+      ]);
+
+      let username = null; // Initialize username variable
+
+      if (data.rows.length == 1) {
+        username = data.rows[0].user_username; // Assign value to username variable
+      }
+
+      // thread data object
+      let threadObj: threadInfo = {
+        leader: username,
+        title: thread.thread_title,
+        message: thread.thread_message,
+      };
+
+      threadsData.push(threadObj);
+    }
+
+    // Thread Created successful
+    return res.status(200).send(threadsData);
+  } catch (error) {
+    // Handle errors
+    console.error("Error creating thread:", error);
+    return res.status(500).send({ error: "Internal server error." });
+  }
+};
+
 // create thread
 const createThread: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -48,4 +94,4 @@ const createThread: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
-export { createThread };
+export { getThreads, createThread };

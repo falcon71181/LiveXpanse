@@ -1,0 +1,14 @@
+{
+  "name": "livexpanse",
+  "version": "1.0.0",
+  "description": "",
+  "repository": "https://github.com/falcon71181/LiveXpanse",
+  "scripts": {
+    "docker:up": "docker compose up -d",
+    "docker:up:build": "docker compose up --build",
+    "docker:down": "docker compose down",
+    "docker:start": "docker compose start",
+    "docker:stop": "docker compose stop",
+    "docker:build": "docker compose build"
+  }
+}
