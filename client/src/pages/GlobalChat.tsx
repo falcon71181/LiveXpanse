@@ -70,7 +70,7 @@ const GlobalChat = () => {
   return (
     <main className="pt-14 w-screen min-h-screen z-10">
       {!isConnected && (
-        <h1 className="text-white">
+        <h1 className="p-3 text-white">
           ERROR: Some error occured: Couldn't connect to socker server
         </h1>
       )}
