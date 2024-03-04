@@ -1,23 +1,33 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Logo from "../assets/logo.png";
 import { siteName } from "../config/WebSite";
 import { FaRegUser } from "react-icons/fa";
+import { IoLogoWechat } from "react-icons/io5";
 import { AiOutlineGlobal } from "react-icons/ai";
 
 const NavBar = () => {
-  // acuire the pathname to do conditional styling based on pages
-  const pathname = window.location.pathname;
+  const location = useLocation();
 
   return (
     <main className="px-5 bg-[#151E27] fixed h-12 w-full flex items-center justify-between z-50 border-2 border-blue-500">
       <section className="flex items-center gap-3">
         <Link to="/" className="mr-5 flex items-center gap-3">
-          <img src={Logo} className="h-8 w-8"></img>
+          <img src={Logo} className="h-8 w-8" alt="Logo"></img>
           <h1 className="text-lg text-[#8D65DE] font-extrabold">{siteName}</h1>
         </Link>
-        <Link to="/chat" className={getNavLinkClasses(pathname, "/contact")}>
+        <Link
+          to="/chat"
+          className={`text-stone-300 hover:text-[#a970ff] h-7 w-14 flex gap-1 justify-center items-center ${location.pathname === "/chat" && "text-[#a970ff]"}`}
+        >
           <AiOutlineGlobal />
           <h1 className="text-sm font-semibold">Chat</h1>
+        </Link>
+        <Link
+          to="/community"
+          className={`text-stone-300 hover:text-[#a970ff] h-7 w-14 flex gap-1 justify-center items-center ${location.pathname === "/community" && "text-[#a970ff]"}`}
+        >
+          <IoLogoWechat />
+          <h1 className="text-sm font-semibold">Community</h1>
         </Link>
         {/* Add More Nav Options here */}
       </section>
@@ -61,13 +71,5 @@ const NavBar = () => {
     </main>
   );
 };
-
-// Helper function to determine NavLink classes
-const getNavLinkClasses = (currentPath: string, targetPath: string) =>
-  `${
-    currentPath === targetPath
-      ? "text-grny"
-      : "text-stone-300 hover:text-[#a970ff]"
-  } h-7 w-14 flex gap-1 justify-center items-center text-slate-300`;
 
 export default NavBar;
