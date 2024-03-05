@@ -8,11 +8,11 @@ import { user_routes } from "./routes/users";
 import { thread_routes } from "./routes/threads";
 import { Server } from "socket.io";
 import { createServer } from "http";
+import { getOrigins } from "./utils/origin";
 
 // port for server
 const SERVER_PORT = process.env.SERVER_PORT || 3333;
-// port of client app
-const CLIENT_PORT = process.env.CLIENT_PORT || 5173;
+const ORIGINS = getOrigins()
 
 const app = express();
 const httpServer = createServer(app);
@@ -20,18 +20,13 @@ const httpServer = createServer(app);
 // Create an instance of the Socket.IO server
 const io = new Server(httpServer, {
   cors: {
-    origin: [
-      `http://localhost:${CLIENT_PORT}`,
-      "http://localhost:3000",
-      "http://localhost:8000",
-      "http://localhost:4173",
-    ],
+    origin: ORIGINS,
   },
 });
 
 // CORS Options
 const corsOptions = {
-  origin: (process.env?.ALLOWED_ORIGIN || "http://localhost:3333").split(","),
+  origin: ORIGINS,
   methods: (process.env?.ALLOWED_METHODS || "GET", "POST").split(","),
 };
 
