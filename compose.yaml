@@ -10,6 +10,8 @@ services:
   server:
     container_name: livexpanse-server
     build: ./server
+    environment:
+      POSTGRES_HOST: db
     ports: 
       - "3333:3333"
     depends_on:
