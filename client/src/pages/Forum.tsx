@@ -12,7 +12,14 @@ const Forum = () => {
       try {
         const response = await fetch(`${SERVER}/threads`);
         const data = await response.json();
-        setThreadData(data);
+
+        if (!response.ok) {
+            throw new Error(data.error)
+        }
+
+        if (response.ok) {
+            setThreadData(data)
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -26,6 +33,7 @@ const Forum = () => {
         <h1 className="h-14 w-full flex justify-center text-4xl text-white font-bold tracking-wider overflow-hidden">
           LiveXpanse Connect
         </h1>
+        {threadData.length === 0 && <h1 className='font-light text-sm text-center text-white/60 mt-5'>No thread available</h1>}
         <div className="mt-8 flex flex-col items-center gap-4">
           {threadData.map((thread: Thread) => (
             <ThreadCard key={thread.title + thread.leader} thread={thread} />
