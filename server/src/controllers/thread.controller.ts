@@ -1,25 +1,10 @@
-import { createTable } from "../database/threads";
+import { createThreadTable } from "../database/threads";
+import { createUserTable } from '../database/users';
 import { createReplyTable } from "../database/replies";
 import { pool } from "../database/db";
 import type { RequestHandler, Request, Response } from "express";
 import type { QueryResult } from "pg";
-
-type threadInfo = {
-  threadId: number;
-  leader: string;
-  title: string;
-  message: string;
-  noOfReplies: number;
-};
-
-type reply = {
-  parentReplyId: number | null;
-  replyId: number;
-  leader: string;
-  message: string;
-};
-
-type SingleThreadInfo = threadInfo & { replies: reply[] };
+import { Reply, SingleThreadInfo, ThreadInfo } from "../types/thread";
 
 // get single thread info
 const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
@@ -53,13 +38,13 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
     // Create the replies table if it doesn't exist
     await createReplyTable();
 
-    const replies: reply[] = [];
+    const replies: Reply[] = [];
     const replyData: QueryResult = await pool.query(
       "SELECT reply_id, parent_reply_id, replier_user_id, reply_message FROM replies WHERE thread_id = $1",
       [threadId],
     );
 
-    // Retrieve the reply data for the thread
+    // Retrieve the Reply data for the thread
     for (const replyRow of replyData.rows) {
       let replierUsername = null;
       const replierData: QueryResult = await pool.query(
@@ -70,13 +55,12 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
         replierUsername = replierData.rows[0].user_username;
       }
 
-      const replyObj: reply = {
+      const replyObj: Reply = {
         parentReplyId: Number(replyRow.parent_reply_id),
         replyId: Number(replyRow.reply_id),
         leader: replierUsername,
         message: replyRow.reply_message,
       };
-
       replies.push(replyObj);
     }
 
@@ -101,7 +85,11 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
 // get all thread info
 const getAllThreads: RequestHandler = async (_req: Request, res: Response) => {
   try {
-    await createTable();
+    // Crating required tables if not exists
+    await createThreadTable();
+    await createUserTable();
+    await createReplyTable();
+
     // fetching threads from table threads
     const threads: QueryResult = await pool.query("SELECT * FROM threads");
 
@@ -113,6 +101,7 @@ const getAllThreads: RequestHandler = async (_req: Request, res: Response) => {
     const threadsData = [];
 
     // Iterate through each row in the threads result
+
     for (const thread of threads.rows) {
       // fetching username using user_id
       let data = await pool.query("SELECT * FROM users WHERE user_id = $1", [
@@ -133,7 +122,7 @@ const getAllThreads: RequestHandler = async (_req: Request, res: Response) => {
       const noOfReplies = Number(noOfReplies_query.rows[0].count) || 0;
 
       // thread data object
-      let threadObj: threadInfo = {
+      let threadObj: ThreadInfo = {
         noOfReplies: Number(noOfReplies) || 0,
         threadId: thread.thread_id,
         leader: username,
@@ -181,7 +170,7 @@ const createThread: RequestHandler = async (req: Request, res: Response) => {
     const trimmedMessage: string = message.trim();
 
     // wait for table to be created
-    await createTable();
+    await createThreadTable();
 
     // inserting thread data into table threads
     await pool.query(
