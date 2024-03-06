@@ -2,6 +2,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { pool } from "../database/db";
 import type { QueryResult } from "pg";
 import type { Request, Response, NextFunction } from "express";
+import { createUserTable } from "../database/users";
 
 // Secret key for JWT signing
 const JWT_SECRET: string = process.env.JWT_SECRET || "secret";
@@ -35,6 +36,7 @@ export const isAuth = async (
     // Extract email from JWT payload
     const { email } = payload;
 
+    await createUserTable();
     // Query database to find user by email
     const user: QueryResult = await pool.query(
       `SELECT * FROM users WHERE user_email = $1`,

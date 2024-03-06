@@ -1,4 +1,4 @@
-import { createTable } from "../database/users";
+import { createUserTable } from "../database/users";
 import { pool } from "../database/db";
 import bcrypt, { compare } from "bcrypt";
 import { createToken } from "../utils/token";
@@ -28,7 +28,7 @@ const loginUser: RequestHandler = async (req: Request, res: Response) => {
     }
 
     // Ensure table exists in database
-    await createTable();
+    await createUserTable();
 
     // Check if user exists
     const existingUser: QueryResult = await pool.query(
@@ -95,7 +95,7 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
 
   try {
     // Wait for db to Create Table users
-    await createTable();
+    await createUserTable();
 
     // Check for already existing user
     const existingUser: QueryResult = await pool.query(

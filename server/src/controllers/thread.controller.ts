@@ -11,6 +11,7 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
   try {
     const threadId = req.params.thread_Id;
 
+    await createThreadTable();
     // Retrieve the thread from the database
     const threads: QueryResult = await pool.query(
       "SELECT * FROM threads WHERE thread_id = $1",
@@ -19,6 +20,7 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
 
     const thread = threads.rows[0];
 
+    await createUserTable();
     // Retrieve the user data of the thread leader
     const userData: QueryResult = await pool.query(
       "SELECT * FROM users WHERE user_id = $1",
@@ -28,6 +30,7 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
     if (userData.rows.length == 1) {
       username = userData.rows[0].user_username;
     }
+
     const noOfReplies_query: QueryResult = await pool.query(
       "SELECT COUNT(reply_message) FROM replies WHERE thread_id = $1",
       [threadId],
@@ -77,7 +80,7 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
     // Send the thread object as the response
     return res.status(200).send(threadObj);
   } catch (error) {
-    console.error("Error creating thread:", error);
+    console.error("Error creating thread first:", error);
     return res.status(500).send({ error: "Internal server error." });
   }
 };
@@ -85,10 +88,8 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
 // get all thread info
 const getAllThreads: RequestHandler = async (_req: Request, res: Response) => {
   try {
-    // Crating required tables if not exists
-    await createThreadTable();
     await createUserTable();
-    await createReplyTable();
+    await createThreadTable();
 
     // fetching threads from table threads
     const threads: QueryResult = await pool.query("SELECT * FROM threads");
@@ -102,6 +103,9 @@ const getAllThreads: RequestHandler = async (_req: Request, res: Response) => {
 
     // Iterate through each row in the threads result
 
+    // Creating required tables if not exists
+    await createUserTable();
+    await createReplyTable();
     for (const thread of threads.rows) {
       // fetching username using user_id
       let data = await pool.query("SELECT * FROM users WHERE user_id = $1", [
@@ -157,6 +161,7 @@ const createThread: RequestHandler = async (req: Request, res: Response) => {
     // extracting user_email from req object that was added in Middleware
     const user_email = (req as Request & { email?: string }).email;
 
+    await createUserTable();
     // extracting user info from database users
     const userInfo: QueryResult = await pool.query(
       "SELECT * FROM users WHERE user_email = $1",
@@ -169,9 +174,7 @@ const createThread: RequestHandler = async (req: Request, res: Response) => {
     const trimmedTitle: string = title.trim();
     const trimmedMessage: string = message.trim();
 
-    // wait for table to be created
     await createThreadTable();
-
     // inserting thread data into table threads
     await pool.query(
       "INSERT INTO threads (thread_title, thread_message, leader_user_id) VALUES ($1, $2, $3)",

@@ -2,6 +2,7 @@ import { createReplyTable } from "../database/replies";
 import { pool } from "../database/db";
 import type { RequestHandler, Request, Response } from "express";
 import type { QueryResult } from "pg";
+import { createUserTable } from "../database/users";
 
 // create reply or subReply to a thread
 const createReply: RequestHandler = async (req: Request, res: Response) => {
@@ -20,6 +21,7 @@ const createReply: RequestHandler = async (req: Request, res: Response) => {
     // extracting user_email from req object that was added in Middleware
     const user_email = (req as Request & { email?: string }).email;
 
+    await createUserTable();
     // extracting user info from database users
     const userInfo: QueryResult = await pool.query(
       "SELECT * FROM users WHERE user_email = $1",
