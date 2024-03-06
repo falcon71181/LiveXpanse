@@ -1,58 +1,31 @@
 import { createTable } from "../database/threads";
-import { createReplyTable, createSubReplyTable } from "../database/replies";
+import { createReplyTable } from "../database/replies";
 import { pool } from "../database/db";
 import type { RequestHandler, Request, Response } from "express";
 import type { QueryResult } from "pg";
 
 type threadInfo = {
+  threadId: number;
   leader: string;
   title: string;
   message: string;
 };
 
 type reply = {
+  parentReplyId: number | null;
+  replyId: number;
   leader: string;
   message: string;
-  subReplies: reply[] | null;
 };
 
-type singleThreadInfo = threadInfo & { replies: reply[] };
-
-// Recursive function to fetch subReplies
-const fetchSubReplies = async (replyId: number): Promise<reply[]> => {
-  const subRepliesData: QueryResult = await pool.query(
-    "SELECT * FROM reply_tags WHERE parent_reply_id = $1",
-    [replyId],
-  );
-
-  const subReplies: reply[] = [];
-  for (const subReplyData of subRepliesData.rows) {
-    let subReplierUsername = null;
-    let subReplierData: QueryResult = await pool.query(
-      "SELECT * FROM users WHERE user_id = $1",
-      [subReplyData.replier_user_id],
-    );
-    if (subReplierData.rows.length == 1) {
-      subReplierUsername = subReplierData.rows[0].user_username;
-    }
-
-    const subReplyObj: reply = {
-      leader: subReplierUsername,
-      message: subReplyData.reply_message,
-      subReplies: await fetchSubReplies(subReplyData.reply_id),
-    };
-
-    subReplies.push(subReplyObj);
-  }
-
-  return subReplies;
-};
+type SingleThreadInfo = threadInfo & { replies: reply[] };
 
 // get single thread info
 const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
   try {
     const threadId = req.params.thread_Id;
 
+    // Retrieve the thread from the database
     const threads: QueryResult = await pool.query(
       "SELECT * FROM threads WHERE thread_id = $1",
       [threadId],
@@ -60,6 +33,7 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
 
     const thread = threads.rows[0];
 
+    // Retrieve the user data of the thread leader
     const userData: QueryResult = await pool.query(
       "SELECT * FROM users WHERE user_id = $1",
       [thread.leader_user_id],
@@ -69,15 +43,16 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
       username = userData.rows[0].user_username;
     }
 
+    // Create the replies table if it doesn't exist
     await createReplyTable();
-    await createSubReplyTable();
 
     const replies: reply[] = [];
     const replyData: QueryResult = await pool.query(
-      "SELECT reply_id, replier_user_id, reply_message FROM replies WHERE thread_id = $1",
+      "SELECT reply_id, parent_reply_id, replier_user_id, reply_message FROM replies WHERE thread_id = $1",
       [threadId],
     );
 
+    // Retrieve the reply data for the thread
     for (const replyRow of replyData.rows) {
       let replierUsername = null;
       const replierData: QueryResult = await pool.query(
@@ -88,24 +63,26 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
         replierUsername = replierData.rows[0].user_username;
       }
 
-      const subReplies = await fetchSubReplies(replyRow.reply_id);
-
       const replyObj: reply = {
+        parentReplyId: Number(replyRow.parent_reply_id),
+        replyId: Number(replyRow.reply_id),
         leader: replierUsername,
         message: replyRow.reply_message,
-        subReplies: subReplies,
       };
 
       replies.push(replyObj);
     }
 
-    const threadObj: singleThreadInfo = {
+    // Create the SingleThreadInfo object with the retrieved data
+    const threadObj: SingleThreadInfo = {
+      threadId: Number(threadId),
       leader: username,
       title: thread.thread_title,
       message: thread.thread_message,
       replies: replies,
     };
 
+    // Send the thread object as the response
     return res.status(200).send(threadObj);
   } catch (error) {
     console.error("Error creating thread:", error);
@@ -114,7 +91,7 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
 };
 
 // get all thread info
-const getThreads: RequestHandler = async (_req: Request, res: Response) => {
+const getAllThreads: RequestHandler = async (_req: Request, res: Response) => {
   try {
     await createTable();
     // fetching threads from table threads
@@ -142,6 +119,7 @@ const getThreads: RequestHandler = async (_req: Request, res: Response) => {
 
       // thread data object
       let threadObj: threadInfo = {
+        threadId: thread.thread_id,
         leader: username,
         title: thread.thread_title,
         message: thread.thread_message,
@@ -204,4 +182,4 @@ const createThread: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
-export { getThreadInfo, getThreads, createThread };
+export { getThreadInfo, getAllThreads, createThread };
