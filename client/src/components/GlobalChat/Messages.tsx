@@ -18,13 +18,22 @@ const MessagesLogs: React.FC<MessagesLogsProps> = ({ messages }) => {
     <main className="flex-grow">
       <div className="flex flex-col" ref={messageLogs}>
         {messages.map((message: Message, index: Key) => (
-          <div
+          <main
             key={index}
-            className={`h-full w-fit mb-2 text-slate-50 px-3 py-2 rounded-full justify-center inline-block ${message.type === "sent" ? "bg-[#8D65DE] self-end" : "bg-gray-600"
-              }`}
+            className={`w-full my-2 px-4 inline-block ${message.type === "sent" ? "bg-[#444037] border-l-2 border-yellow-500" : ""}`}
           >
-            {message.data.message}
-          </div>
+            <div className="flex gap-3 text-sm">
+              <h1 className="font-semibold tracking-wide text-[#E91E63] hover:underline">
+                username
+              </h1>
+              <h1 className="text-gray-400">date&time</h1>
+            </div>
+            <div
+              className={`${message.type === "sent" ? "text-zinc-300" : "text-white"}`}
+            >
+              {message.data.message}
+            </div>
+          </main>
         ))}
       </div>
     </main>
