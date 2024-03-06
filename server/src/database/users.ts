@@ -1,6 +1,6 @@
 import { pool } from "./db";
 
-export const createTable = async () => {
+export const createUserTable = async () => {
   try {
     await pool.query(`CREATE TABLE IF NOT EXISTS users (
             user_id SERIAL PRIMARY KEY,
