@@ -9,6 +9,7 @@ type threadInfo = {
   leader: string;
   title: string;
   message: string;
+  noOfReplies: number;
 };
 
 type reply = {
@@ -42,6 +43,12 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
     if (userData.rows.length == 1) {
       username = userData.rows[0].user_username;
     }
+    const noOfReplies_query: QueryResult = await pool.query(
+      "SELECT COUNT(reply_message) FROM replies WHERE thread_id = $1",
+      [threadId],
+    );
+
+    const noOfReplies = Number(noOfReplies_query.rows[0].count) || 0;
 
     // Create the replies table if it doesn't exist
     await createReplyTable();
@@ -75,6 +82,7 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
 
     // Create the SingleThreadInfo object with the retrieved data
     const threadObj: SingleThreadInfo = {
+      noOfReplies: Number(noOfReplies) || 0,
       threadId: Number(threadId),
       leader: username,
       title: thread.thread_title,
@@ -117,8 +125,16 @@ const getAllThreads: RequestHandler = async (_req: Request, res: Response) => {
         username = data.rows[0].user_username; // Assign value to username variable
       }
 
+      const noOfReplies_query: QueryResult = await pool.query(
+        "SELECT COUNT(reply_message) FROM replies WHERE thread_id = $1",
+        [thread.thread_id],
+      );
+
+      const noOfReplies = Number(noOfReplies_query.rows[0].count) || 0;
+
       // thread data object
       let threadObj: threadInfo = {
+        noOfReplies: Number(noOfReplies) || 0,
         threadId: thread.thread_id,
         leader: username,
         title: thread.thread_title,
