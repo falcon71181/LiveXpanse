@@ -1,7 +1,7 @@
 import { createUserTable } from "../database/users";
 import { pool } from "../database/db";
 import bcrypt, { compare } from "bcrypt";
-import { createToken } from "../utils/token";
+import { createToken } from "../lib/token";
 import type { RequestHandler, Request, Response } from "express";
 import type { QueryResult } from "pg";
 
