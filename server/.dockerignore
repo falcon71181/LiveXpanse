@@ -2,6 +2,7 @@
 .dockerignore
 .gitignore
 .env
+.env_example
 build
 node_modules
 Dockerfile

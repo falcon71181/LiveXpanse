@@ -2,6 +2,7 @@
 .dockerignore
 .gitignore
 .env
+.env_example
 dist
 node_modules
 Dockerfile
