@@ -102,10 +102,9 @@ const getAllThreads: RequestHandler = async (_req: Request, res: Response) => {
     const threadsData = [];
 
     // Iterate through each row in the threads result
-
     // Creating required tables if not exists
-    await createUserTable();
     await createReplyTable();
+
     for (const thread of threads.rows) {
       // fetching username using user_id
       let data = await pool.query("SELECT * FROM users WHERE user_id = $1", [
