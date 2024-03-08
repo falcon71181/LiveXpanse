@@ -10,6 +10,7 @@ services:
   server:
     container_name: livexpanse-server
     build: ./server
+    env_file: ./server/.env
     environment:
       POSTGRES_HOST: db
     ports: 
@@ -20,8 +21,9 @@ services:
   client:
     container_name: livexpanse-client
     build: ./client
+    env_file: ./client/.env
     ports: 
-      - "5173:5173"
+      - "8000:5173"
     depends_on:
       - server
     restart: unless-stopped
