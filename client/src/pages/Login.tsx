@@ -6,6 +6,7 @@ const Login: React.FC = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState();
 
   // handle submission
   const handleSubmit = async (e: SyntheticEvent) => {
@@ -24,11 +25,10 @@ const Login: React.FC = () => {
         },
         body: JSON.stringify(formData),
       });
+      const result = await response.json();
 
       // Check if the request was successful
       if (response.ok) {
-        const result = await response.json();
-
         // Add data to local Storage
         localStorage.setItem("token", result.token);
         localStorage.setItem("username", result.username);
@@ -37,6 +37,7 @@ const Login: React.FC = () => {
         window.location.replace("/");
       } else {
         // Handle Login failure
+        setError(result.error);
         console.error("Login failed");
       }
     } catch (error) {
@@ -66,6 +67,9 @@ const Login: React.FC = () => {
             placeholder="Password"
             required
           />
+          {error && (
+            <div className="text-red-400 font-semibold">Error : {error}</div>
+          )}
           <button
             type="button"
             onClick={handleSubmit}

@@ -8,6 +8,7 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState();
 
   // handle submission
   const handleSubmit = async (e: SyntheticEvent) => {
@@ -34,11 +35,10 @@ const Register: React.FC = () => {
         },
         body: JSON.stringify(formData),
       });
+      const result = await response.json();
 
       // Check if the request was successful
       if (response.ok) {
-        const result = await response.json();
-
         // Add data to local Storage
         localStorage.setItem("token", result.token);
         localStorage.setItem("username", result.username);
@@ -47,6 +47,7 @@ const Register: React.FC = () => {
         window.location.replace("/");
       } else {
         // Handle registration failure
+        setError(result.error);
         console.error("Registration failed");
       }
     } catch (error) {
@@ -102,6 +103,9 @@ const Register: React.FC = () => {
               <span className="pointer-events-none absolute left-1 top-1 block h-4 w-4 rounded-full bg-slate-600 transition-all duration-200 peer-checked:left-7 peer-checked:bg-green-300"></span>
             </div>
           </label>
+          {error && (
+            <div className="text-red-400 font-semibold">Error : {error}</div>
+          )}
           <button
             type="button"
             onClick={handleSubmit}
