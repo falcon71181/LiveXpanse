@@ -5,9 +5,29 @@ import { FaRegUser } from "react-icons/fa";
 import { FaClipboardQuestion } from "react-icons/fa6";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { MdForum } from "react-icons/md";
+import { useEffect, useState } from "react";
 
 const NavBar = () => {
+  const SERVER = import.meta.env.VITE_SERVER;
+
   const location = useLocation();
+  const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    // Verify User's jwt token
+    const verifyUser = async () => {
+      if (!localStorage.getItem("token")) return;
+
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${SERVER}/users/validate`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) setIsLogin(true);
+    };
+    verifyUser();
+  }, []);
 
   return (
     <main className="px-8 bg-[#151E27] fixed h-12 w-full flex items-center justify-between z-50 border-b-[1px] border-blue-500">
@@ -77,21 +97,33 @@ const NavBar = () => {
           </svg>
         </button>
       </section>
-      <section className="flex items-center gap-3">
+      {isLogin ? (
         <Link
-          to="/login"
-          className="h-7 w-14 bg-[#263846] hover:bg-[#363846] rounded flex justify-center items-center text-slate-300 hover:text-white"
+          to="/"
+          className="text-[#efeff1] hover:text-[#a970ff] flex items-center gap-3"
         >
-          <h1 className="text-sm font-semibold">Log In</h1>
+          <div className="font-bold tracking-wider">
+            {localStorage.getItem("username")}
+          </div>
+          <FaRegUser />
         </Link>
-        <Link
-          to="/register"
-          className="h-7 w-[4.2rem] bg-[#30146D] hover:bg-[#451B9E] rounded flex justify-center items-center text-slate-300 hover:text-white"
-        >
-          <h1 className="text-sm font-semibold">Sign Up</h1>
-        </Link>
-        <FaRegUser color="white" />
-      </section>
+      ) : (
+        <section className="flex items-center gap-3">
+          <Link
+            to="/login"
+            className="h-7 w-14 bg-[#263846] hover:bg-[#363846] rounded flex justify-center items-center text-slate-300 hover:text-white"
+          >
+            <h1 className="text-sm font-semibold">Log In</h1>
+          </Link>
+          <Link
+            to="/register"
+            className="h-7 w-[4.2rem] bg-[#30146D] hover:bg-[#451B9E] rounded flex justify-center items-center text-slate-300 hover:text-white"
+          >
+            <h1 className="text-sm font-semibold">Sign Up</h1>
+          </Link>
+          <FaRegUser color="white" />
+        </section>
+      )}
     </main>
   );
 };

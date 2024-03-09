@@ -79,7 +79,11 @@ const loginUser: RequestHandler = async (req: Request, res: Response) => {
     const token: string = createToken(user.user_email);
 
     // Login successful
-    return res.status(200).send({ username: user.user_username, token: token });
+    return res.status(200).send({
+      message: "User logged in successfully.",
+      username: user.user_username,
+      token: token,
+    });
   } catch (error) {
     console.error("Error logging in:", error);
     return res.status(500).send({ error: "Internal server error." });
