@@ -5,6 +5,29 @@ import { createToken } from "../lib/token";
 import type { RequestHandler, Request, Response } from "express";
 import type { QueryResult } from "pg";
 
+// send user`s data
+const getUserData: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const user_email = (req as Request & { email?: string }).email;
+
+    // extracting user info from database users
+    const userInfo: QueryResult = await pool.query(
+      "SELECT * FROM users WHERE user_email = $1",
+      [user_email],
+    );
+
+    const user_details = userInfo.rows[0];
+    res.status(200).send({
+      username: user_details.user_username,
+      email: user_details.user_email,
+    });
+  } catch (error) {
+    // Handle errors
+    console.error("Error sending user's details:", error);
+    return res.status(500).send({ error: "Internal server error." });
+  }
+};
+
 // User Login
 const loginUser: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -121,9 +144,11 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
     const token: string = createToken(email);
 
     // Send success response
-    res
-      .status(200)
-      .send({ message: "User registered successfully.", token: token });
+    res.status(200).send({
+      message: "User registered successfully.",
+      username: username,
+      token: token,
+    });
   } catch (error) {
     // Handle errors
     console.error("Error registering user:", error);
@@ -131,4 +156,4 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
-export { loginUser, registerUser };
+export { getUserData, loginUser, registerUser };
