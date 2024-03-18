@@ -17,6 +17,7 @@ const GlobalChat = () => {
         socketId: socket.id,
         message: message,
       },
+      time: Date.now().toString(),
     };
 
     setMessages((prevMessages) => {
@@ -32,6 +33,7 @@ const GlobalChat = () => {
     const newReceivedMessage: Message = {
       type: "received",
       data: data,
+      time: Date.now().toString(),
     };
 
     setMessages((prevMessages) => {

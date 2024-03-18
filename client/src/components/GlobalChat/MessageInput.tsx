@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-
-interface MessageInputProps {
-  onSendMessage: (message: string) => void;
-}
+import { MessageInputProps } from "../../types/GlobalChat";
 
 const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
   const [inputData, setInputData] = useState<string>("");
