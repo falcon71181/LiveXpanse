@@ -15,6 +15,8 @@ const GlobalChat = () => {
       type: "sent",
       data: {
         socketId: socket.id,
+        // TODO: Make it Secure
+        username: localStorage.getItem("username") || "Anon",
         message: message,
       },
       time: Date.now().toString(),
@@ -24,7 +26,6 @@ const GlobalChat = () => {
       return [...prevMessages, newSentMessage];
     });
 
-    console.log("client side emitting messages");
     socket.emit("sent-message", newSentMessage.data);
   };
 

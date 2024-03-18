@@ -25,7 +25,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ props }) => {
     >
       <div className="flex gap-3 text-sm">
         <h1 className="font-semibold tracking-wide text-[#E91E63] hover:underline">
-          username
+          {props.data.username}
         </h1>
         <h1 className="text-gray-400">{time}</h1>
       </div>

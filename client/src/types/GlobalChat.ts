@@ -1,5 +1,6 @@
 export type MessageData = {
   socketId?: string;
+  username: string;
   message: string;
 };
 
