@@ -21,7 +21,7 @@ const Register: React.FC = () => {
 
     try {
       const formData: RegisterFormData = {
-        username: email as string,
+        username: username as string,
         email: email as string,
         password: password as string,
         confirmPassword: confirmPassword as string,
