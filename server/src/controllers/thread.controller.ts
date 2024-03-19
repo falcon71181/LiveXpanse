@@ -43,7 +43,7 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
 
     const replies: Reply[] = [];
     const replyData: QueryResult = await pool.query(
-      "SELECT reply_id, parent_reply_id, replier_user_id, reply_message FROM replies WHERE thread_id = $1",
+      "SELECT created_on, reply_id, parent_reply_id, replier_user_id, reply_message FROM replies WHERE thread_id = $1",
       [threadId],
     );
 
@@ -59,6 +59,7 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
       }
 
       const replyObj: Reply = {
+        createdOn: replyRow.created_on,
         parentReplyId: Number(replyRow.parent_reply_id),
         replyId: Number(replyRow.reply_id),
         leader: replierUsername,
@@ -69,6 +70,7 @@ const getThreadInfo: RequestHandler = async (req: Request, res: Response) => {
 
     // Create the SingleThreadInfo object with the retrieved data
     const threadObj: SingleThreadInfo = {
+      createdOn: thread.created_on,
       noOfReplies: Number(noOfReplies) || 0,
       threadId: Number(threadId),
       leader: username,
@@ -126,6 +128,7 @@ const getAllThreads: RequestHandler = async (_req: Request, res: Response) => {
 
       // thread data object
       let threadObj: ThreadInfo = {
+        createdOn: thread.created_on,
         noOfReplies: Number(noOfReplies) || 0,
         threadId: thread.thread_id,
         leader: username,
@@ -176,8 +179,8 @@ const createThread: RequestHandler = async (req: Request, res: Response) => {
     await createThreadTable();
     // inserting thread data into table threads
     await pool.query(
-      "INSERT INTO threads (thread_title, thread_message, leader_user_id) VALUES ($1, $2, $3)",
-      [trimmedTitle, trimmedMessage, user_id],
+      "INSERT INTO threads (created_on, thread_title, thread_message, leader_user_id) VALUES ($1, $2, $3, $4)",
+      [Date.now(), trimmedTitle, trimmedMessage, user_id],
     );
 
     // Thread Created successful

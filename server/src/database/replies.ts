@@ -4,6 +4,7 @@ import { pool } from "./db";
 const createReplyTable = async () => {
   try {
     await pool.query(`CREATE TABLE IF NOT EXISTS replies (
+      created_on BIGINT NOT NULL,
       reply_id SERIAL PRIMARY KEY,
       thread_id INT NOT NULL,
       parent_reply_id INT DEFAULT NULL,

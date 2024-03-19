@@ -1,4 +1,5 @@
 type ThreadInfo = {
+  createdOn: string,
   threadId: number;
   leader: string;
   title: string;
@@ -7,6 +8,7 @@ type ThreadInfo = {
 }
 
 type Reply = {
+  createdOn: string,
   parentReplyId: number | null;
   replyId: number;
   leader: string;

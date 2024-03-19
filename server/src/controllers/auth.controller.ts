@@ -20,6 +20,7 @@ const getUserData: RequestHandler = async (req: Request, res: Response) => {
     res.status(200).send({
       username: user_details.user_username,
       email: user_details.user_email,
+      joinedOn: user_details.registered_on,
     });
   } catch (error) {
     // Handle errors
@@ -140,8 +141,8 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
 
     // Insert user into database
     await pool.query(
-      "INSERT INTO users (user_username, user_email, user_password) VALUES ($1, $2, $3)",
-      [username, email, hashedPassword],
+      "INSERT INTO users (registered_on, user_username, user_email, user_password) VALUES ($1, $2, $3, $4)",
+      [Date.now(), username, email, hashedPassword],
     );
 
     //  create jwt token

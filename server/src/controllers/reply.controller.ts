@@ -38,8 +38,8 @@ const createReply: RequestHandler = async (req: Request, res: Response) => {
 
     // Inserting reply data into replies table
     await pool.query(
-      "INSERT INTO replies (thread_id, parent_reply_id, replier_user_id, reply_message) VALUES ($1, $2, $3, $4)",
-      [thread_id, parent_id, user_id, trimmedReply],
+      "INSERT INTO replies (created_on, thread_id, parent_reply_id, replier_user_id, reply_message) VALUES ($1, $2, $3, $4, $5)",
+      [Date.now(), thread_id, parent_id, user_id, trimmedReply],
     );
 
     // Reply Created successful
