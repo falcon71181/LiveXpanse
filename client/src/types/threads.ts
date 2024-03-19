@@ -1,4 +1,7 @@
 export type Thread = {
+  createdOn: string;
+  noOfReplies: number;
+  threadId: number;
   leader: string;
   title: string;
   message: string;

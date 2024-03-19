@@ -40,9 +40,8 @@ const NavBar = () => {
         </Link>
         <Link
           to="/chat"
-          className={`${
-            location.pathname === "/chat" ? "text-[#a970ff]" : "text-stone-300"
-          } mx-4 hover:text-[#a970ff] w-14 flex gap-1 justify-center items-center`}
+          className={`${location.pathname === "/chat" ? "text-[#a970ff]" : "text-stone-300"
+            } mx-4 hover:text-[#a970ff] w-14 flex gap-1 justify-center items-center`}
         >
           <div className="flex items-center justify-center gap-2">
             <AiOutlineGlobal />
@@ -50,12 +49,11 @@ const NavBar = () => {
           </div>
         </Link>
         <Link
-          to="/community"
-          className={`${
-            location.pathname === "/community"
-              ? "text-[#a970ff]"
-              : "text-stone-300"
-          } mx-4 hover:text-[#a970ff] h-7 w-14 flex gap-1 justify-center items-center`}
+          to="/community/board"
+          className={`${location.pathname.includes("/community")
+            ? "text-[#a970ff]"
+            : "text-stone-300"
+            } mx-4 hover:text-[#a970ff] h-7 w-14 flex gap-1 justify-center items-center`}
         >
           <div className="flex items-center gap-2">
             <MdForum />
@@ -64,9 +62,8 @@ const NavBar = () => {
         </Link>
         <Link
           to="/rules"
-          className={`${
-            location.pathname === "/rules" ? "text-[#a970ff]" : "text-stone-300"
-          } mx-4 hover:text-[#a970ff] w-14 flex gap-1 justify-center items-center`}
+          className={`${location.pathname === "/rules" ? "text-[#a970ff]" : "text-stone-300"
+            } mx-4 hover:text-[#a970ff] w-14 flex gap-1 justify-center items-center`}
         >
           <div className="flex items-center justify-center gap-2">
             <FaClipboardQuestion />
