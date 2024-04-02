@@ -11,6 +11,7 @@ export default {
     extend: {
       colors: {
         background_dark: "#162536",
+        background_card: "#151E27",
         saffron: "#fa4103",
         grny: "#8cff00",
       },

@@ -14,11 +14,11 @@ const Forum = () => {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error)
+          throw new Error(data.error)
         }
 
         if (response.ok) {
-            setThreadData(data)
+          setThreadData(data)
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -28,8 +28,8 @@ const Forum = () => {
   }, []);
 
   return (
-    <div className="pt-16 w-screen flex justify-center min-h-screen text-zinc-300">
-      <div className="m-6 w-8/12">
+    <div className="pt-16 w-screen flex justify-center min-h-screen text-zinc-300 transition-all duration-100">
+      <div className="m-1 sm:m-3 md:m-6 w-full sm:w-10/12 md:w-9/12 lg:w-8/12">
         <h1 className="h-14 w-full flex justify-center text-4xl text-white font-bold tracking-wider overflow-hidden">
           LiveXpanse Connect
         </h1>
