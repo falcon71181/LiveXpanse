@@ -1,15 +1,19 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo.png";
 import { siteName } from "../config/WebSite";
 import { FaRegUser } from "react-icons/fa";
 import { FaClipboardQuestion } from "react-icons/fa6";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { MdForum } from "react-icons/md";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/auth";
+import { AuthContextType } from "../types/auth";
 
 const NavBar = () => {
   const SERVER = import.meta.env.VITE_SERVER;
 
+  const { setAuthUser } = useContext(AuthContext) as AuthContextType;
+  const navigate = useNavigate();
   const location = useLocation();
   const [isLogin, setIsLogin] = useState(false);
 
@@ -28,6 +32,12 @@ const NavBar = () => {
     };
     verifyUser();
   }, []);
+
+  const logoutUser = () => {
+    localStorage.clear();
+    setAuthUser(null);
+    navigate(0);
+  }
 
   return (
     <main className="px-8 bg-[#151E27] fixed h-12 w-full flex items-center justify-between z-50 border-b-[1px] border-blue-500">
@@ -95,15 +105,21 @@ const NavBar = () => {
         </button>
       </section>
       {isLogin ? (
+      <div className='flex gap-4'>
+
         <Link
           to="/"
-          className="text-[#efeff1] hover:text-[#a970ff] flex items-center gap-3"
+          className="text-[#efeff1] hover:text-[#a970ff] flex items-center gap-2"
         >
           <div className="font-bold tracking-wider">
             {localStorage.getItem("username")}
           </div>
           <FaRegUser />
         </Link>
+        <button onClick={logoutUser} className='border border-gray-500 px-2 py-1 text-sm rounded-md text-white hover:bg-background_dark'>
+          Logout
+        </button>
+        </div>
       ) : (
         <section className="flex items-center gap-3">
           <Link
