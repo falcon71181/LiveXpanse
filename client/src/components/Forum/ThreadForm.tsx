@@ -1,23 +1,52 @@
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useContext, useState } from "react";
+import { AuthContext } from "../../context/auth";
+import { AuthContextType } from "../../types/auth";
+import { ThreadFormData } from "../../types/threads";
 
 type ThreadFormProps = {
     threadPop: boolean;
     setThreadPop: Dispatch<SetStateAction<boolean>>;
+    setNewThread: Dispatch<SetStateAction<ThreadFormData>>;
 }
 
-const ThreadForm = ({ threadPop, setThreadPop }: ThreadFormProps) => {
+const ThreadForm = ({ threadPop, setThreadPop, setNewThread }: ThreadFormProps) => {
+    const { authUser } = useContext(AuthContext) as AuthContextType;
     const [threadTitle, setThreadTitle] = useState('');
     const [threadDescription, setThreadDescription] = useState('')
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const threadData = {
+        const threadData: ThreadFormData = {
             title: threadTitle,
-            description: threadDescription
+            message: threadDescription
         }
 
-        console.log(threadData);
+        try {
+            // TODO: Change origin to change dynamically for prod
+            const res = await fetch('http://localhost:3333/threads/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authUser?.token}`
+                },
+                body: JSON.stringify(threadData)
+            })
+
+            if (!res.ok) {
+                const data = await res.json()
+                const error = data.error;
+                throw error;
+            }
+
+            if (res.ok) {
+                setNewThread(threadData);
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error(error.message);
+            }
+        }
 
         setThreadPop(false);
         setThreadTitle('');
