@@ -8,16 +8,14 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./context/auth.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-    <React.StrictMode>
-        <BrowserRouter>
-            <AuthContextProvider>
-                <main className="min-h-screen w-screen flex">
-                    <NavBar />
-                    <div className="bg-background_dark">
-                        <App />
-                    </div>
-                </main>
-            </AuthContextProvider>
-        </BrowserRouter>
-    </React.StrictMode>,
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthContextProvider>
+        <main className="min-h-screen w-screen flex bg-background_dark">
+          <NavBar />
+          <App />
+        </main>
+      </AuthContextProvider>
+    </BrowserRouter>
+  </React.StrictMode>,
 );

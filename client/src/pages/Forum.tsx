@@ -35,10 +35,10 @@ const Forum = () => {
 
     return (
         <div>
-            <div className={`${threadPop ? 'blur-md pointer-events-none' : 'blur-none'} transition relative pt-16 w-screen flex justify-center min-h-screen text-zinc-300`}>
-                <div className="m-6 w-8/12">
+            <div className={`${threadPop ? 'blur-md pointer-events-none' : 'blur-none'} relative pt-16 w-screen flex justify-center min-h-screen text-zinc-300 transition-all duration-100`}>
+                <div className="m-1 sm:m-3 md:m-6 w-full sm:w-10/12 md:w-9/12 lg:w-8/12">
                     <div className='relative max-w-2xl mx-auto p-2'>
-                        <h1 className="flex justify-center text-4xl text-white font-bold tracking-wider overflow-hidden">
+                        <h1 className="w-full flex justify-center text-4xl text-white font-bold tracking-wider overflow-hidden">
                             LiveXpanse Connect
                         </h1>
                         {authUser && (
@@ -49,7 +49,7 @@ const Forum = () => {
                     </div>
                     {threadData.length === 0 && <h1 className='font-light text-sm text-center text-white/60 mt-5'>No thread available</h1>}
                     <div className="mt-8 flex flex-col items-center gap-4">
-                        {threadData.map(thread => (
+                        {threadData.map((thread: Thread) => (
                             <ThreadCard key={thread.title + thread.leader} thread={thread} />
                         ))}
                     </div>

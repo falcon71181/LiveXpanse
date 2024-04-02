@@ -5,6 +5,7 @@ import Rules from "./pages/Rules";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Forum from "./pages/Forum";
+import { Post } from "./pages/Post";
 import { Route, Routes } from "react-router-dom";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <Route path="/chat" element={<GlobalChat />} />
       <Route path="/rules" element={<Rules />} />
       <Route path="/community/board" element={<Forum />} />
+      <Route path="/community/post/:threadId" element={<Post />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
     </Routes>

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const ThreadCard: React.FC<ThreadCardProps> = ({ thread }) => {
   return (
-    <Link to={`/community/post/${thread.threadId}`} className="p-3 w-11/12 h-40 bg-[#151E27] flex flex-col gap-1 items-center rounded-xl overflow-hidden border-[1px] border-[#2fa8a3] hover:border-[#47FFF7]">
+    <Link to={`/community/post/${thread.threadId}`} className="p-3 w-11/12 h-40 bg-background_card flex flex-col gap-1 items-center rounded-xl overflow-hidden border-[1px] border-[#2fa8a3] hover:border-[#47FFF7]">
       <div className="max-w-[99%] w-[99%] h-10 flex justify-between">
         <h1 className=" bg-gradient-to-t from-[#c7d2fe] to-[#8678f9] h-10 bg-clip-text text-xl text-transparent text-ellipsis overflow-hidden whitespace-nowrap">
           {thread.title}
