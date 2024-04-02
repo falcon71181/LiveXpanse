@@ -167,7 +167,7 @@ const createThread: RequestHandler = async (req: Request, res: Response) => {
     // extracting user info from database users
     const userInfo: QueryResult = await pool.query(
       "SELECT * FROM users WHERE user_email = $1",
-      [user_email],
+      [user_email as string],
     );
     // filtering userInfo to get user_id
     const user_id = userInfo.rows[0].user_id;

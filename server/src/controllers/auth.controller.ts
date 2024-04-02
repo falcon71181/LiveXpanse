@@ -13,7 +13,7 @@ const getUserData: RequestHandler = async (req: Request, res: Response) => {
     // extracting user info from database users
     const userInfo: QueryResult = await pool.query(
       "SELECT * FROM users WHERE user_email = $1",
-      [user_email],
+      [user_email as string],
     );
 
     const user_details = userInfo.rows[0];
