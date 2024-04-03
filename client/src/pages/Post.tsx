@@ -33,15 +33,17 @@ export const Post = () => {
   }, [SERVER, threadId]);
 
   return (
-    <main className="pt-16 w-screen min-h-screen flex justify-center text-zinc-300">
+    <main className="pt-16 w-screen min-h-screen flex flex-col items-center text-zinc-300">
       <div
-        className="px-6 h-10 text-white m-1 sm:m-3 md:m-6 w-full sm:w-10/12 md:w-9/12 lg:w-8/12">
+        className="px-6 h-10 text-white m-1 sm:m-3 md:m-6 w-full sm:w-10/12 md:w-9/12 lg:w-8/12 border border-red-300">
         <Link to="/community/board"
           className="group h-full flex gap-3 items-center w-20"
         >
           <IoArrowBack className="group-hover:translate-x-1 transition-transform duration-200" />
           <span className="text-lg">Back</span>
         </Link>
+      </div>
+      <div className="w-8/12">
         {postData && (
           <PostCard key={threadId} props={postData} />
         )}
