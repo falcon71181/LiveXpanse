@@ -4,12 +4,13 @@ import { Link } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import { FaRegCommentAlt } from "react-icons/fa";
 import { PostCard } from "../components/Forum/Post/PostCard";
+import { PostInfo } from "../types/posts";
 
 export const Post = () => {
   const { threadId } = useParams();
   const SERVER = import.meta.env.VITE_SERVER;
 
-  const [postData, setPostData] = useState([]);
+  const [postData, setPostData] = useState<PostInfo>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +30,7 @@ export const Post = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [SERVER, threadId]);
 
   return (
     <main className="pt-16 w-screen min-h-screen flex justify-center text-zinc-300">
@@ -41,10 +42,12 @@ export const Post = () => {
           <IoArrowBack className="group-hover:translate-x-1 transition-transform duration-200" />
           <span className="text-lg">Back</span>
         </Link>
-        <PostCard key={threadId} props={postData} />
-        <div className="flex gap-3 items-center">
+        {postData && (
+          <PostCard key={threadId} props={postData} />
+        )}
+        <div className="group flex gap-3 items-center">
           <FaRegCommentAlt />
-          <h1 className="text-base pb-2 font-semibold text-white">{postData.noOfReplies} Comments</h1>
+          <h1 className="text-base pb-2 font-semibold text-white">{postData?.noOfReplies} Comments</h1>
         </div>
       </div>
     </main>

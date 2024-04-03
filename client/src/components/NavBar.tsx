@@ -5,33 +5,14 @@ import { FaRegUser } from "react-icons/fa";
 import { FaClipboardQuestion } from "react-icons/fa6";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { MdForum } from "react-icons/md";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../context/auth";
 import { AuthContextType } from "../types/auth";
 
 const NavBar = () => {
-  const SERVER = import.meta.env.VITE_SERVER;
-
-  const { setAuthUser } = useContext(AuthContext) as AuthContextType;
+  const { authUser, setAuthUser } = useContext(AuthContext) as AuthContextType;
   const navigate = useNavigate();
   const location = useLocation();
-  const [isLogin, setIsLogin] = useState(false);
-
-  useEffect(() => {
-    // Verify User's jwt token
-    const verifyUser = async () => {
-      if (!localStorage.getItem("token")) return;
-
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${SERVER}/users/validate`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.ok) setIsLogin(true);
-    };
-    verifyUser();
-  }, []);
 
   const logoutUser = () => {
     localStorage.clear();
@@ -104,21 +85,21 @@ const NavBar = () => {
           </svg>
         </button>
       </section>
-      {isLogin ? (
-      <div className='flex gap-4'>
+      {authUser ? (
+        <div className='flex gap-4'>
 
-        <Link
-          to="/"
-          className="text-[#efeff1] hover:text-[#a970ff] flex items-center gap-2"
-        >
-          <div className="font-bold tracking-wider">
-            {localStorage.getItem("username")}
-          </div>
-          <FaRegUser />
-        </Link>
-        <button onClick={logoutUser} className='border border-gray-500 px-2 py-1 text-sm rounded-md text-white hover:bg-background_dark'>
-          Logout
-        </button>
+          <Link
+            to="/"
+            className="text-[#efeff1] hover:text-[#a970ff] flex items-center gap-2"
+          >
+            <div className="font-bold tracking-wider">
+              {localStorage.getItem("username")}
+            </div>
+            <FaRegUser />
+          </Link>
+          <button onClick={logoutUser} className='border border-red-300 px-2 py-1 text-sm rounded-md text-white hover:bg-red-950'>
+            Logout
+          </button>
         </div>
       ) : (
         <section className="flex items-center gap-3">

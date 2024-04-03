@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react"
 import { FaReply } from "react-icons/fa";
+import { PostInfo } from "../../../types/posts";
 
-export const PostCard = ({ props: postData }: any) => {
+interface PostCardProps {
+  props: PostInfo;
+}
+
+export const PostCard: React.FC<PostCardProps> = ({ props: postData }) => {
   const [postCreatedOn, setPostCreatedOn] = useState("");
 
   useEffect(() => {
@@ -30,8 +35,8 @@ export const PostCard = ({ props: postData }: any) => {
         {postData.message}
       </div>
       <section className="absolute bottom-6 md:bottom-8 lg:bottom-10">
-        <div className="group flex gap-2 items-center cursor-pointer">
-          <FaReply className="group-hover:text-[#a970ff]" />
+        <div className="group flex gap-3 items-center cursor-pointer">
+          <FaReply className="group-hover:text-[#a970ff] group-hover:translate-x-1 transition-all duration-200" />
           <span className="group-hover:text-[#a970ff]">Reply</span>
         </div>
       </section>
