@@ -45,7 +45,7 @@ export const Post = () => {
         event.preventDefault();
 
         try {
-            const res = await fetch(`http://localhost:3333/${threadId}/replies`, {
+            const res = await fetch(`http://localhost:3333/threads/${threadId}/replies`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -100,12 +100,12 @@ export const Post = () => {
                     <div className='relative'>
                         <textarea
                             value={replyText}
-                            placeholder="Enter your reply here..."
+                            placeholder={`${authUser === null ? 'Signin to reply to this thread!' : 'Enter your reply here...'}`}
                             rows={6}
                             onChange={e => setReplyText(e.target.value)}
                             className='border border-gray-500 p-2 w-full text-sm rounded-md bg-[#192A3E] outline-none focus:border-gray-200'
                         />
-                        <button className='absolute right-0 bottom-0 mr-3 mb-4'>
+                        <button disabled={authUser === null} className='absolute right-0 bottom-0 mr-3 mb-4'>
                             <IoSend className="h-5 w-5" />
                         </button>
                     </div>
