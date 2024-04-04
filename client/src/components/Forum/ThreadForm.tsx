@@ -1,4 +1,4 @@
-import { Dispatch, FormEvent, SetStateAction, useContext, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/auth";
 import { AuthContextType } from "../../types/auth";
 import { ThreadFormData } from "../../types/threads";
@@ -15,6 +15,27 @@ const ThreadForm = ({ threadPop, setThreadPop, setNewThread }: ThreadFormProps) 
   const { authUser } = useContext(AuthContext) as AuthContextType;
   const [threadTitle, setThreadTitle] = useState('');
   const [threadDescription, setThreadDescription] = useState('')
+  const [error, setError] = useState('');
+
+  // TOO messy, TODO : find better way to do it
+  useEffect(() => {
+    if (threadTitle.length > 130 && !error || threadDescription.length > 1000 && !error) {
+      if (threadTitle.length > 130 && !error) {
+        const errorMsg = "Title length should be less than 130 letters.";
+        setError(errorMsg);
+      }
+
+      if (threadDescription.length > 1000 && !error) {
+        const errorMsg = "Description length should be less than 1000 letters.";
+        setError(errorMsg);
+      }
+    } else {
+      setError('');
+    }
+
+  }, [threadTitle, threadDescription])
+
+
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -38,10 +59,12 @@ const ThreadForm = ({ threadPop, setThreadPop, setNewThread }: ThreadFormProps) 
       if (!res.ok) {
         const data = await res.json()
         const error = data.error;
+        setError(error);
         throw error;
       }
 
       if (res.ok) {
+        setThreadPop(false);
         setNewThread(threadData);
       }
     } catch (error) {
@@ -50,7 +73,6 @@ const ThreadForm = ({ threadPop, setThreadPop, setNewThread }: ThreadFormProps) 
       }
     }
 
-    setThreadPop(false);
     setThreadTitle('');
     setThreadDescription('');
   }
@@ -77,6 +99,9 @@ const ThreadForm = ({ threadPop, setThreadPop, setNewThread }: ThreadFormProps) 
           className='bg-transparent border border-gray-500 p-2 text-sm rounded-md bg-[#192A3E] outline-none focus:outline-1 focus:outline-white'
           required
         />
+        {error && (
+          <div className="w-full flex justify-center text-red-300 text-sm">{error}</div>
+        )}
         <button className='px-3 py-2.5 inline-flex justify-center items-center text-sm rounded-md bg-[#34495E] border border-gray-500 cursor-pointer hover:bg-[#2C3E50]'>
           Add Thread
         </button>

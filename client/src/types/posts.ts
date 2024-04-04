@@ -8,7 +8,7 @@ export type PostInfo = {
   replies?: Reply[];
 }
 
-type Reply = {
+export type Reply = {
   createdOn: string,
   parentReplyId: number | null;
   replyId: number;

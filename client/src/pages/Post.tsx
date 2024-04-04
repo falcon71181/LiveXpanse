@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import { FaRegCommentAlt } from "react-icons/fa";
 import { PostCard } from "../components/Forum/Post/PostCard";
-import { PostInfo } from "../types/posts";
+import { PostInfo, Reply } from "../types/posts";
+import { ReplyCard } from "../components/Forum/Post/ReplyCard";
 
 export const Post = () => {
   const { threadId } = useParams();
@@ -51,6 +52,11 @@ export const Post = () => {
           <FaRegCommentAlt />
           <h1 className="text-base pb-2 font-semibold text-white">{postData?.noOfReplies} Comments</h1>
         </div>
+      </div>
+      <div className="my-5 w-8/12">
+        {postData?.replies && postData.replies.map((reply: Reply, index) => (
+          <ReplyCard key={index} props={reply} />
+        ))}
       </div>
     </main>
   )

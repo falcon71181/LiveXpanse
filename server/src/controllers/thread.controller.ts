@@ -153,6 +153,12 @@ const createThread: RequestHandler = async (req: Request, res: Response) => {
   try {
     let { title, message } = req.body;
 
+    // Check if the title exceeds the limit of 1000 characters
+    if (title.length > 130) {
+      return res
+        .status(400)
+        .send({ error: "Title exceeds the character limit of 1000." });
+    }
     // Check if the message exceeds the limit of 1000 characters
     if (message.length > 1000) {
       return res
