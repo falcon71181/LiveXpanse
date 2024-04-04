@@ -23,7 +23,7 @@ export const PostCard: React.FC<PostCardProps> = ({ props: postData }) => {
   }, [postData.createdOn]);
 
   return (
-    <main className="relative min-h-60 p-3 md:p-5 lg:p-6 my-6 md:my-8 rounded-xl bg-background_card flex flex-col overflow-hidden border-[1px] border-[#2fa8a3] hover:border-[#47FFF7]">
+    <main className="relative min-h-60 p-3 md:p-5 lg:p-6 rounded-xl bg-background_card flex flex-col overflow-hidden border-[1px] border-[#2fa8a3] hover:border-[#47FFF7]">
       <section className="text-sm md:text-base h-10 flex justify-between items-center">
         <h1 className="text-[#a970ff]">by <span className="text-base inline-flex animate-text-gradient bg-gradient-to-r from-[#b2a8fd] via-[#2fa8a3] to-[#8678f9] bg-[200%_auto] bg-clip-text text-transparent font-semibold text-ellipsis overflow-hidden tracking-wide">{postData.leader}</span></h1>
         <span className="text-zinc-300">{postCreatedOn}</span>
