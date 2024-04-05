@@ -35,10 +35,10 @@ export const PostCard: React.FC<PostCardProps> = ({ props: postData }) => {
         {postData.message}
       </div>
       <section className="absolute bottom-6 md:bottom-8 lg:bottom-10">
-        <div className="group flex gap-3 items-center cursor-pointer">
+        <a href="#replyForm" className="group flex gap-3 items-center cursor-pointer">
           <FaReply className="group-hover:text-[#a970ff] group-hover:translate-x-1 transition-all duration-200" />
           <span className="group-hover:text-[#a970ff]">Reply</span>
-        </div>
+        </a>
       </section>
     </main>
   )
