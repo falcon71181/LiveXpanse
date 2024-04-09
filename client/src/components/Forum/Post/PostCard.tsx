@@ -31,10 +31,10 @@ export const PostCard: React.FC<PostCardProps> = ({ props: postData }) => {
       <div className="min-h-10 font-semibold text-2xl bg-gradient-to-t from-[#c7d2fe] to-[#8678f9] bg-clip-text text-transparent text-ellipsis overflow-hidden whitespace-nowrap">
         {postData.title}
       </div>
-      <div className="mb-3 text-zinc-300">
+      <div className="mb-10 text-zinc-300">
         {postData.message}
       </div>
-      <section className="absolute bottom-6 md:bottom-8 lg:bottom-10">
+      <section className="absolute bottom-5">
         <a href="#replyForm" className="group flex gap-3 items-center cursor-pointer">
           <FaReply className="group-hover:text-[#a970ff] group-hover:translate-x-1 transition-all duration-200" />
           <span className="group-hover:text-[#a970ff]">Reply</span>
