@@ -23,7 +23,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ thread }) => {
         </h1>
         <div>{(new Date(parseInt(thread.createdOn))).toLocaleString()}</div>
       </div>
-      <div className="p-2 max-h-[4.5rem] max-w-[99%] w-[99%] text-sm line-clamp-3">
+      <div className="p-2 max-h-[4.5rem] max-w-[99%] w-[99%] text-sm line-clamp-3 break-words">
         {thread.message}
       </div>
     </Link>

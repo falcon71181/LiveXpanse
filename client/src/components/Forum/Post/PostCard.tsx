@@ -31,7 +31,7 @@ export const PostCard: React.FC<PostCardProps> = ({ props: postData }) => {
       <div className="min-h-10 font-semibold text-2xl bg-gradient-to-t from-[#c7d2fe] to-[#8678f9] bg-clip-text text-transparent text-ellipsis overflow-hidden whitespace-nowrap">
         {postData.title}
       </div>
-      <div className="mb-10 text-zinc-300">
+      <div className="mb-10 text-zinc-300 break-words">
         {postData.message}
       </div>
       <section className="absolute bottom-5">

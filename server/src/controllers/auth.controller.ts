@@ -1,4 +1,4 @@
-import { createUserTable } from "../database/users";
+import { createUser as createUserTable } from "../database/users";
 import { pool } from "../database/db";
 import bcrypt, { compare } from "bcrypt";
 import { createToken } from "../lib/token";

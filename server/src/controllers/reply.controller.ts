@@ -2,7 +2,7 @@ import { createReplyTable } from "../database/replies";
 import { pool } from "../database/db";
 import type { RequestHandler, Request, Response } from "express";
 import type { QueryResult } from "pg";
-import { createUserTable } from "../database/users";
+import { createUser as createUserTable } from "../database/users";
 
 // create reply or subReply to a thread
 const createReply: RequestHandler = async (req: Request, res: Response) => {

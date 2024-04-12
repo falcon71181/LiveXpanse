@@ -1,5 +1,5 @@
 import { createThreadTable } from "../database/threads";
-import { createUserTable } from '../database/users';
+import { createUser as createUserTable } from '../database/users';
 import { createReplyTable } from "../database/replies";
 import { pool } from "../database/db";
 import type { RequestHandler, Request, Response } from "express";

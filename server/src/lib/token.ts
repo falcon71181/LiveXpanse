@@ -1,17 +1,20 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 
+type JwtPayload = {
+  email: string
+}
 // Define the type for the secret
-const JWT_Secret: string = process.env.JWT_SECRET || "secret";
+const JWT_SECRET: string = process.env.JWT_SECRET || "secret";
 
 export const createToken = (email: string): string => {
-  if (!JWT_Secret) {
-    throw new Error("JWT Secret is not defined");
+  try {
+    const payload: JwtPayload = { email };
+    const signOptions: SignOptions = { expiresIn: "1h" };
+    const token: string = jwt.sign(payload, JWT_SECRET, signOptions);
+
+    return token;
+  } catch (error) {
+    console.error("Error creating token:", error);
+    throw error;
   }
-
-  // Define options for token signing
-  const signOptions: SignOptions = { expiresIn: "1h" };
-
-  const token = jwt.sign({ email }, JWT_Secret, signOptions);
-
-  return token;
 };
