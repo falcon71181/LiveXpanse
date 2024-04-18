@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 
 const ThreadCard: React.FC<ThreadCardProps> = ({ thread }) => {
   return (
-    <Link to={`/community/post/${thread.threadId}`} className="p-3 w-11/12 h-44 bg-background_card flex flex-col gap-1 items-center rounded-xl overflow-hidden border-[1px] border-[#2fa8a3] hover:border-[#47FFF7]">
+    <Link to={`/community/post/${thread.threadId}`} className="group p-3 w-11/12 h-44 bg-background_card flex flex-col gap-1 items-center rounded-xl overflow-hidden border-[1px] border-[#2fa8a3] hover:border-[#47FFF7]">
       <div className="max-w-[99%] w-[99%] h-10 flex justify-between">
-        <h1 className=" bg-gradient-to-t from-[#c7d2fe] to-[#8678f9] h-10 bg-clip-text text-xl text-transparent text-ellipsis overflow-hidden whitespace-nowrap">
+        <h1 className="max-w-[96%] line-clamp-1 bg-gradient-to-t from-[#c7d2fe] to-[#8678f9] h-10 bg-clip-text text-xl text-transparent whitespace-nowrap relative after:absolute after:bg-neutral-400 after:bottom-0 after:left-0 after:h-px after:w-full after:origin-bottom-right after:scale-x-0 group-hover:after:origin-bottom-left group-hover:after:scale-x-100 after:transition-transform after:ease-in-out after:duration-300">
           {thread.title}
         </h1>
         <span className="h-10 flex items-center justify-center gap-1">
