@@ -6,17 +6,22 @@ import type { RequestHandler, Request, Response } from "express";
 import type { QueryResult } from "pg";
 
 // send user`s data
-const getUserData: RequestHandler = async (req: Request, res: Response) => {
+const getProfileData: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const user_email = (req as Request & { email?: string }).email;
+    const username: string = req.params.username;
 
+    await createUserTable();
     // extracting user info from database users
     const userInfo: QueryResult = await pool.query(
-      "SELECT * FROM users WHERE user_email = $1",
-      [user_email as string],
+      "SELECT * FROM users WHERE user_username = $1",
+      [username as string],
     );
 
+    if (!userInfo.rows.length) {
+      return res.status(404).send({ error: "User do not exist." });
+    }
     const user_details = userInfo.rows[0];
+
     res.status(200).send({
       username: user_details.user_username,
       email: user_details.user_email,
@@ -161,4 +166,4 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
-export { getUserData, loginUser, registerUser };
+export { getProfileData, loginUser, registerUser };
