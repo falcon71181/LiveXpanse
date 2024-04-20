@@ -5,6 +5,7 @@ import Rules from "./pages/Rules";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Forum from "./pages/Forum";
+import Profile from "./pages/Profile";
 import { Post } from "./pages/Post";
 import { Route, Routes } from "react-router-dom";
 
@@ -18,6 +19,7 @@ function App() {
       <Route path="/community/post/:threadId" element={<Post />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 }

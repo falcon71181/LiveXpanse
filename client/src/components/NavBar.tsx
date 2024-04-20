@@ -22,7 +22,7 @@ const NavBar = () => {
 
   return (
     <main className="px-8 bg-[#151E27] fixed h-12 w-full flex items-center justify-between z-50 border-b-[1px] border-blue-500">
-      <section className="flex items-center gap-3">
+      <section className="flex items-center gap-3 z-50">
         <Link to="/" className="mr-5 flex items-center gap-3">
           <img src={Logo} className="h-8 w-8" alt="Logo"></img>
           <h1 className="text-lg text-[#8D65DE] font-extrabold tracking-widest">
@@ -89,7 +89,7 @@ const NavBar = () => {
         <div className='flex gap-4'>
 
           <Link
-            to="/"
+            to="/profile"
             className="text-[#efeff1] hover:text-[#a970ff] flex items-center gap-2"
           >
             <div className="font-bold tracking-wider">
