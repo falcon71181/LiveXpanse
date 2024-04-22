@@ -1,22 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { MessageBubbleProps } from "../../types/GlobalChat";
+import { formateTime } from "../../lib/utils";
 
 const MessageBubble: React.FC<MessageBubbleProps> = ({ props }) => {
-  const [time, setTime] = useState<string | null>(null);
-
-  useEffect(() => {
-    {
-      /* TODO: Make it in ago format */
-    }
-    const fetchTime = async () => {
-      const timestamp = parseInt(props.time);
-      const date = new Date(timestamp);
-      const messageDateTime = date.toLocaleTimeString();
-      setTime(messageDateTime);
-    };
-    fetchTime();
-  }, [props.time]);
-
   return (
     <main
       className={`w-screen min-h-12 px-4 inline-block ${
@@ -27,7 +13,8 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ props }) => {
         <h1 className="font-semibold tracking-wide text-[#E91E63] hover:underline">
           {props.data.username}
         </h1>
-        <h1 className="text-gray-400">{time}</h1>
+        {/* TODO: Refactor into 'X mintues/hours ago' format */}
+        <h1 className="text-gray-400">{formateTime(props.time)}</h1>
       </div>
       <div
         className={`${
