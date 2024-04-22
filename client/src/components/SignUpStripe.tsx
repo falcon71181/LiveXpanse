@@ -4,7 +4,7 @@ import { siteName } from "../config/WebSite";
 
 const SignUpStrip = () => {
   return (
-    <main className="absolute bottom-0 m-0 pl-5 pr-12 w-full bg-[#451093] z-50 h-14 flex justify-between items-center rounded-t-md overflow-hidden">
+    <main className="fixed bottom-0 left-0 m-0 pl-5 pr-12 w-full bg-[#451093] z-50 h-14 flex justify-between items-center rounded-t-md overflow-hidden">
       <div className="flex gap-3">
         <Link to="/" className="flex items-center gap-3">
           <img src={Logo} className="h-8 w-8" alt="Logo"></img>
