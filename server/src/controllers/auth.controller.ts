@@ -95,6 +95,7 @@ const updateUserProfile: RequestHandler = async (req: Request, res: Response) =>
         return res.status(200).send({
           message: "Email updated successfully.",
           username: user.user_username,
+          email: trimmedEmail,
           token: token,
         })
       }
@@ -187,6 +188,7 @@ const loginUser: RequestHandler = async (req: Request, res: Response) => {
     return res.status(200).send({
       message: "User logged in successfully.",
       username: user.user_username,
+      email: user.user_email,
       token: token,
     });
   } catch (error) {
@@ -256,6 +258,7 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
     res.status(200).send({
       message: "User registered successfully.",
       username: username,
+      email: email,
       token: token,
     });
   } catch (error) {

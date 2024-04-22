@@ -1,4 +1,4 @@
-import { useContext, useState, SyntheticEvent } from "react"
+import { useContext, useState, SyntheticEvent, useEffect } from "react"
 import { FaUserCheck, FaUserAlt, FaKey } from "react-icons/fa";
 import { AuthContext } from "../context/auth";
 import { AuthContextType } from "../types/auth";
@@ -7,12 +7,19 @@ import { UpdateFormData } from "../types/formData";
 const Profile = () => {
   const SERVER = import.meta.env.VITE_SERVER || "http://localhost:3333";
 
+  const localStorage_email = localStorage.getItem("email") || "";
+  const localStorage_username = localStorage.getItem("username") || "";
+
+  const [defaultEmail, setDefaultEmail] = useState(localStorage_email);
+  const [defaultUsername, setDefaultUsername] = useState(localStorage_username);
+  const [joinedOn, setJoinedOn] = useState("");
+
   const [openChangePassword, setOpenChangePassword] = useState<boolean>(false);
   const { authUser, setAuthUser } = useContext(AuthContext) as AuthContextType;
 
   const [currentPassword, setCurrentPassword] = useState("");
-  const [updatedEmail, setUpdatedEmail] = useState("");
-  const [updatedUsername, setUpdatedUsername] = useState("");
+  const [updatedEmail, setUpdatedEmail] = useState(defaultEmail as string);
+  const [updatedUsername, setUpdatedUsername] = useState(defaultUsername as string);
   const [updatedPassword, setUpdatedPassword] = useState("");
   const [updatedConfirmPassword, setUpdatedConfirmPassword] = useState("");
 
@@ -50,6 +57,9 @@ const Profile = () => {
         if (result.token) {
           localStorage.setItem("token", result.token);
         }
+        if (result.email) {
+          localStorage.setItem("email", result.email);
+        }
 
         // redirecting to Home page after Login
         window.location.replace("/profile");
@@ -63,6 +73,32 @@ const Profile = () => {
       console.error("Error during updating profile:", error);
     }
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // TODO: make profile page public
+        const response = await fetch(`${SERVER}/users/${localStorage.getItem("username")}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data)
+        }
+
+        if (response.ok) {
+          setDefaultUsername(data.username);
+          setDefaultEmail(data.email);
+          const timestamp = parseInt(data.joinedOn);
+          const date = new Date(timestamp);
+          const messageDateTime = date.toLocaleString();
+          setJoinedOn(messageDateTime);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [SERVER]);
 
   return (
     <main className="relative w-full min-h-[90vh] pt-10 text-zinc-300 flex justify-center overflow-y-auto border border-red-300">
@@ -106,7 +142,7 @@ const Profile = () => {
                 <input
                   type="text"
                   className="text-neutral-100 bg-slate-900 w-full h-12 rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-800 placeholder-neutral-400 mb-2 cursor-not-allowed"
-                  placeholder={Date.now().toString()}
+                  placeholder={joinedOn}
                   readOnly
                 />
                 <h1 className="text-start text-xs text-gray-400 uppercase">Current Password</h1>
@@ -142,6 +178,9 @@ const Profile = () => {
                       onChange={(e) => setUpdatedConfirmPassword(e.target.value)}
                     />
                   </div>
+                )}
+                {error && (
+                  <div className="text-sm text-red-300">error</div>
                 )}
                 <button
                   type="button"

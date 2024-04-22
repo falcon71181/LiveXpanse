@@ -17,7 +17,7 @@ const NavBar = () => {
   const logoutUser = () => {
     localStorage.clear();
     setAuthUser(null);
-    navigate(0);
+    navigate("/");
   }
 
   return (

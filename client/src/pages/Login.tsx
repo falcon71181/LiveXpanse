@@ -32,6 +32,7 @@ const Login: React.FC = () => {
         // Add data to local Storage
         localStorage.setItem("token", result.token);
         localStorage.setItem("username", result.username);
+        localStorage.setItem("email", result.email);
 
         // redirecting to Home page after Login
         window.location.replace("/");
