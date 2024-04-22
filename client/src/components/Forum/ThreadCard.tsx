@@ -2,6 +2,7 @@ import React from "react";
 import { ThreadCardProps } from "../../types/threads";
 import { BiSolidMessageRounded } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { formatDate } from "../../lib/utils";
 
 const ThreadCard: React.FC<ThreadCardProps> = ({ thread }) => {
   return (
@@ -21,7 +22,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ thread }) => {
         <h1 className="p-2 text-base inline-flex animate-text-gradient bg-gradient-to-r from-[#b2a8fd] via-[#2fa8a3] to-[#8678f9] bg-[200%_auto] bg-clip-text text-transparent font-semibold text-ellipsis overflow-hidden tracking-wide">
           {thread.leader}
         </h1>
-        <div>{(new Date(parseInt(thread.createdOn))).toLocaleString()}</div>
+        <div>{formatDate(thread.createdOn)}</div>
       </div>
       <div className="p-2 max-h-[4.5rem] max-w-[99%] w-[99%] text-sm line-clamp-3 break-words">
         {thread.message}
