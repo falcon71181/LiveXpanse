@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { loginUser, registerUser, getProfileData } from "../controllers/auth.controller";
+import { loginUser, registerUser, getProfileData, updateUserProfile } from "../controllers/auth.controller";
 import { isAuth } from "../middlewares/authReq";
 import type { IRouter } from "express";
 
@@ -15,6 +15,9 @@ router.post("/register", registerUser);
 router.get("/validate", isAuth, (_req, res) => {
   res.sendStatus(200);
 });
+
+// /users/update
+router.post("/update", isAuth, updateUserProfile);
 
 // /users/:username
 router.get("/:username", getProfileData);

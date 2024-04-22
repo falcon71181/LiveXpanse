@@ -34,6 +34,105 @@ const getProfileData: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
+// Update Profile 
+const updateUserProfile: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const { updatedUsername, updatedEmail, currentPassword, updatedPassword, updatedConfirmPassword } = req.body;
+    const email = (req as Request & { email?: string }).email;
+
+    // Trim whitespace from inputs
+    const trimmedUsername: string = updatedUsername.trim();
+    const trimmedEmail: string = updatedEmail.trim();
+    const trimmedPassword: string = currentPassword.trim();
+    const trimmedUpdatedPassword: string = updatedPassword.trim();
+    const trimmedConfirmPassword: string = updatedConfirmPassword.trim();
+
+    // Check if user exists
+    let existingUser: QueryResult = await pool.query(
+      "SELECT * FROM users WHERE user_email = $1",
+      [email],
+    );
+
+    // Update the email
+    if (email != trimmedEmail) {
+      // Validate email format
+      const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(trimmedEmail)) {
+        return res.status(400).send({ error: "Invalid email format." });
+      }
+
+      const user = existingUser.rows[0];
+
+      const isPasswordCorrect: boolean = await compare(trimmedPassword, user.user_password);
+
+      if (!isPasswordCorrect) {
+        return res.status(401).send({ error: "Incorrect password." });
+      }
+
+      const update_user_email: QueryResult = await pool.query("UPDATE users SET user_email = $1 WHERE user_email = $2", [trimmedEmail as string, email as string]);
+
+      if (update_user_email) {
+        const token: string = createToken(trimmedEmail);
+        return res.status(200).send({
+          message: "Email updated successfully.",
+          username: user.user_username,
+          token: token,
+        })
+      }
+    } else if (trimmedUsername != existingUser.rows[0].user_username) { // Update username
+
+      const user = existingUser.rows[0];
+      const isPasswordCorrect: boolean = await compare(trimmedPassword, user.user_password);
+
+      if (!isPasswordCorrect) {
+        return res.status(401).send({ error: "Incorrect password." });
+      }
+
+      const username_data: QueryResult = await pool.query("SELECT * FROM users WHERE user_username = $1", [trimmedUsername as string]);
+      if (username_data.rows.length != 0) {
+        return res.status(409).send({
+          error: "User with same username exists.",
+        })
+      }
+
+      const update_user_username: QueryResult = await pool.query("UPDATE users SET user_username = $1 WHERE user_email = $2", [trimmedUsername as string, email as string]);
+
+      if (update_user_username) {
+        return res.status(200).send({
+          message: "Username updated successfully.",
+        })
+      }
+    } else if (trimmedUpdatedPassword.length > 8 && trimmedConfirmPassword.length > 8) {
+      if (trimmedUpdatedPassword != trimmedConfirmPassword) {
+        return res.status(401).send({ error: "New password and confirm password are not same." });
+      }
+
+      const user = existingUser.rows[0];
+      const isPasswordCorrect: boolean = await compare(trimmedPassword, user.user_password);
+
+      if (!isPasswordCorrect) {
+        return res.status(401).send({ error: "Incorrect password." });
+      }
+
+      const hashedPassword: string = await bcrypt.hash(trimmedConfirmPassword, 12);
+      const update_user_password: QueryResult = await pool.query("UPDATE users SET user_password = $1 WHERE user_email = $2", [hashedPassword as string, email as string]);
+
+      if (update_user_password) {
+        return res.status(200).send({
+          message: "Password updated successfully.",
+        })
+      }
+    }
+
+    return res.status(404).send({ error: "Wrong request, Check again." });
+
+  } catch (error) {
+    // Handle errors
+    console.error("Error sending user's details:", error);
+    return res.status(500).send({ error: "Internal server error." });
+  }
+}
+
 // User Login
 const loginUser: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -166,4 +265,4 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
-export { getProfileData, loginUser, registerUser };
+export { getProfileData, updateUserProfile, loginUser, registerUser };
