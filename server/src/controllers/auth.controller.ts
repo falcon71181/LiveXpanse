@@ -50,7 +50,7 @@ const updateUserProfile: RequestHandler = async (req: Request, res: Response) =>
     // Check if user exists
     let existingUser: QueryResult = await pool.query(
       "SELECT * FROM users WHERE user_email = $1",
-      [email],
+      [email as string],
     );
     // update the password
     if (trimmedUpdatedPassword.length > 8 && trimmedConfirmPassword.length > 8) {
