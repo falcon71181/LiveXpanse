@@ -15,7 +15,7 @@ const Profile = () => {
   const [joinedOn, setJoinedOn] = useState("");
 
   const [openChangePassword, setOpenChangePassword] = useState<boolean>(false);
-  const { authUser, setAuthUser } = useContext(AuthContext) as AuthContextType;
+  const { authUser } = useContext(AuthContext) as AuthContextType;
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [updatedEmail, setUpdatedEmail] = useState(defaultEmail as string);
