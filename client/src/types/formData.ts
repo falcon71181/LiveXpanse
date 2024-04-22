@@ -7,4 +7,12 @@ type RegisterFormData = {
 
 type LoginFormData = Omit<RegisterFormData, "confirmPassword" | "username">;
 
-export type { RegisterFormData, LoginFormData };
+type UpdateFormData = {
+  updatedUsername: string;
+  updatedEmail: string;
+  currentPassword: string;
+  updatedPassword: string;
+  updatedConfirmPassword: string;
+}
+
+export type { RegisterFormData, LoginFormData, UpdateFormData };

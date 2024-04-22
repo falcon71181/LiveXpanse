@@ -52,9 +52,28 @@ const updateUserProfile: RequestHandler = async (req: Request, res: Response) =>
       "SELECT * FROM users WHERE user_email = $1",
       [email],
     );
+    // update the password
+    if (trimmedUpdatedPassword.length > 8 && trimmedConfirmPassword.length > 8) {
+      if (trimmedUpdatedPassword != trimmedConfirmPassword) {
+        return res.status(401).send({ error: "New password and confirm password are not same." });
+      }
 
-    // Update the email
-    if (email != trimmedEmail) {
+      const user = existingUser.rows[0];
+      const isPasswordCorrect: boolean = await compare(trimmedPassword, user.user_password);
+
+      if (!isPasswordCorrect) {
+        return res.status(401).send({ error: "Incorrect password." });
+      }
+
+      const hashedPassword: string = await bcrypt.hash(trimmedConfirmPassword, 12);
+      const update_user_password: QueryResult = await pool.query("UPDATE users SET user_password = $1 WHERE user_email = $2", [hashedPassword as string, email as string]);
+
+      if (update_user_password) {
+        return res.status(200).send({
+          message: "Password updated successfully.",
+        })
+      }
+    } else if (email != trimmedEmail) { // update the email
       // Validate email format
       const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(trimmedEmail)) {
@@ -100,26 +119,7 @@ const updateUserProfile: RequestHandler = async (req: Request, res: Response) =>
       if (update_user_username) {
         return res.status(200).send({
           message: "Username updated successfully.",
-        })
-      }
-    } else if (trimmedUpdatedPassword.length > 8 && trimmedConfirmPassword.length > 8) {
-      if (trimmedUpdatedPassword != trimmedConfirmPassword) {
-        return res.status(401).send({ error: "New password and confirm password are not same." });
-      }
-
-      const user = existingUser.rows[0];
-      const isPasswordCorrect: boolean = await compare(trimmedPassword, user.user_password);
-
-      if (!isPasswordCorrect) {
-        return res.status(401).send({ error: "Incorrect password." });
-      }
-
-      const hashedPassword: string = await bcrypt.hash(trimmedConfirmPassword, 12);
-      const update_user_password: QueryResult = await pool.query("UPDATE users SET user_password = $1 WHERE user_email = $2", [hashedPassword as string, email as string]);
-
-      if (update_user_password) {
-        return res.status(200).send({
-          message: "Password updated successfully.",
+          username: trimmedUsername,
         })
       }
     }

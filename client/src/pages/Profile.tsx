@@ -1,8 +1,68 @@
-import { useContext, useState } from "react"
+import { useContext, useState, SyntheticEvent } from "react"
 import { FaUserCheck, FaUserAlt, FaKey } from "react-icons/fa";
+import { AuthContext } from "../context/auth";
+import { AuthContextType } from "../types/auth";
+import { UpdateFormData } from "../types/formData";
 
 const Profile = () => {
+  const SERVER = import.meta.env.VITE_SERVER || "http://localhost:3333";
+
   const [openChangePassword, setOpenChangePassword] = useState<boolean>(false);
+  const { authUser, setAuthUser } = useContext(AuthContext) as AuthContextType;
+
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [updatedEmail, setUpdatedEmail] = useState("");
+  const [updatedUsername, setUpdatedUsername] = useState("");
+  const [updatedPassword, setUpdatedPassword] = useState("");
+  const [updatedConfirmPassword, setUpdatedConfirmPassword] = useState("");
+
+  const [error, setError] = useState("");
+
+  // handle user profile update
+  const handleSubmit = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    try {
+      const formData: UpdateFormData = {
+        updatedUsername: updatedUsername,
+        updatedEmail: updatedEmail,
+        currentPassword: currentPassword,
+        updatedPassword: updatedPassword,
+        updatedConfirmPassword: updatedConfirmPassword,
+      };
+      const token = localStorage.getItem('token');
+
+      const response = await fetch(`${SERVER}/users/update`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json();
+
+      // Check if the request was successful
+      if (response.ok) {
+        // Add data to local Storage
+        if (result.username) {
+          localStorage.setItem("username", result.username);
+        }
+        if (result.token) {
+          localStorage.setItem("token", result.token);
+        }
+
+        // redirecting to Home page after Login
+        window.location.replace("/profile");
+      } else {
+        // Handle Login failure
+        setError(result.error);
+        console.error("Profile update failed");
+      }
+    } catch (error) {
+      // Handle network or other errors
+      console.error("Error during updating profile:", error);
+    }
+  }
 
   return (
     <main className="relative w-full min-h-[90vh] pt-10 text-zinc-300 flex justify-center overflow-y-auto border border-red-300">
@@ -16,72 +76,85 @@ const Profile = () => {
             <span className="text-sm">Verified</span>
           </div>
         </div>
-        <section className="my-3 mx-36 flex flex-col border border-cyan-300">
-          <div className="text-neutral-100 text-4xl flex items-center gap-4">
-            <FaUserAlt />
-            <h1 className="font-semibold pb-2">Edit Profile</h1>
-          </div>
-          <div className="px-5 grid grid-cols-7 gap-2">
-            <div className="px-5 py-2 col-span-5 flex flex-col gap-2 border border-green-300">
-              <h1 className="text-start text-xs text-gray-400 uppercase">Email address</h1>
-              <input
-                type="email"
-                className="text-neutral-100 bg-slate-900 w-full h-12 rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-800 placeholder-neutral-100 mb-2"
-                placeholder="Email"
-              />
-              <h1 className="text-start text-xs text-gray-400 uppercase">Username</h1>
-              <input
-                type="text"
-                className="text-neutral-100 bg-slate-900 w-full h-12 rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-800 placeholder-neutral-100 mb-2"
-                placeholder={localStorage.getItem("username") || "Anon"}
-              />
-              <h1 className="text-start text-xs text-gray-400 uppercase">Joined On</h1>
-              <input
-                type="text"
-                className="text-neutral-100 bg-slate-900 w-full h-12 rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-800 placeholder-neutral-400 mb-2 cursor-not-allowed"
-                placeholder={Date.now().toString()}
-                readOnly
-              />
-              <h1 className="text-start text-xs text-gray-400 uppercase">Current Password</h1>
-              <input
-                type="password"
-                className="text-neutral-100 bg-slate-900 w-full h-12 rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-800 placeholder-neutral-400 mb-2"
-                placeholder="Your Current Password"
-                required
-              />
-              <div className="flex gap-3 items-center text-gray-400 hover:text-neutral-100 w-fit cursor-pointer"
-                onClick={() => { setOpenChangePassword(!openChangePassword) }}>
-                <FaKey />
-                <h1 className="text-sm pb-1">Change Password</h1>
-              </div>
-              {openChangePassword && (
-                <div className="flex flex-col gap-2">
-                  <h1 className="text-start text-xs text-gray-400 uppercase">New Password</h1>
-                  <input
-                    type="password"
-                    className="text-neutral-100 bg-slate-900 w-full h-12 rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-800 placeholder-neutral-400 mb-2"
-                    placeholder="Your New Password"
-                    required
-                  />
-                  <h1 className="text-start text-xs text-gray-400 uppercase">Confirm New Password</h1>
-                  <input
-                    type="password"
-                    className="text-neutral-100 bg-slate-900 w-full h-12 rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-800 placeholder-neutral-400 mb-2"
-                    placeholder="Confirm New Password"
-                    required
-                  />
-                </div>
-              )}
-              <button
-                type="button"
-                className="inline-block cursor-pointer rounded-md bg-gray-700 px-4 py-3.5 text-center text-sm font-semibold uppercase text-white transition duration-200 ease-in-out hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-700 focus-visible:ring-offset-2 active:scale-95"
-              >
-                Save Changes
-              </button>
+        {authUser && (
+          <section className="my-3 mx-36 flex flex-col border border-cyan-300">
+            <div className="text-neutral-100 text-4xl flex items-center gap-4">
+              <FaUserAlt />
+              <h1 className="font-semibold pb-2">Edit Profile</h1>
             </div>
-            <div className="p-3 col-span-2 border border-red-400">Avator Change option</div>
-          </div>
-        </section>
+            <div className="px-5 grid grid-cols-7 gap-2">
+              <div className="px-5 py-2 col-span-5 flex flex-col gap-2 border border-green-300">
+                <h1 className="text-start text-xs text-gray-400 uppercase">Email address</h1>
+                <input
+                  type="email"
+                  className="text-neutral-100 bg-slate-900 w-full h-12 rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-800 placeholder-neutral-400 mb-2"
+                  placeholder="Email"
+                  defaultValue={localStorage.getItem("email") || ""}
+                  value={updatedEmail}
+                  onChange={(e) => setUpdatedEmail(e.target.value)}
+                />
+                <h1 className="text-start text-xs text-gray-400 uppercase">Username</h1>
+                <input
+                  type="text"
+                  className="text-neutral-100 bg-slate-900 w-full h-12 rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-800 placeholder-neutral-400 mb-2"
+                  placeholder="Your username"
+                  defaultValue={localStorage.getItem("username") || ""}
+                  value={updatedUsername}
+                  onChange={(e) => setUpdatedUsername(e.target.value)}
+                />
+                <h1 className="text-start text-xs text-gray-400 uppercase">Joined On</h1>
+                <input
+                  type="text"
+                  className="text-neutral-100 bg-slate-900 w-full h-12 rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-800 placeholder-neutral-400 mb-2 cursor-not-allowed"
+                  placeholder={Date.now().toString()}
+                  readOnly
+                />
+                <h1 className="text-start text-xs text-gray-400 uppercase">Current Password</h1>
+                <input
+                  type="password"
+                  className="text-neutral-100 bg-slate-900 w-full h-12 rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-800 placeholder-neutral-400 mb-2"
+                  placeholder="Your Current Password"
+                  required
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                />
+                <div className="flex gap-3 items-center text-gray-400 hover:text-neutral-100 w-fit cursor-pointer"
+                  onClick={() => { setOpenChangePassword(!openChangePassword) }}>
+                  <FaKey />
+                  <h1 className="text-sm pb-1">Change Password</h1>
+                </div>
+                {openChangePassword && (
+                  <div className="flex flex-col gap-2">
+                    <h1 className="text-start text-xs text-gray-400 uppercase">New Password</h1>
+                    <input
+                      type="password"
+                      className="text-neutral-100 bg-slate-900 w-full h-12 rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-800 placeholder-neutral-400 mb-2"
+                      placeholder="Your New Password"
+                      value={updatedPassword}
+                      onChange={(e) => setUpdatedPassword(e.target.value)}
+                    />
+                    <h1 className="text-start text-xs text-gray-400 uppercase">Confirm New Password</h1>
+                    <input
+                      type="password"
+                      className="text-neutral-100 bg-slate-900 w-full h-12 rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-800 placeholder-neutral-400 mb-2"
+                      placeholder="Confirm New Password"
+                      value={updatedConfirmPassword}
+                      onChange={(e) => setUpdatedConfirmPassword(e.target.value)}
+                    />
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  className="inline-block cursor-pointer rounded-md bg-gray-700 px-4 py-3.5 text-center text-sm font-semibold uppercase text-white transition duration-200 ease-in-out hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-700 focus-visible:ring-offset-2 active:scale-95"
+                >
+                  Save Changes
+                </button>
+              </div>
+              <div className="p-3 col-span-2 border border-red-400">Avator Change option</div>
+            </div>
+          </section>
+        )}
       </div>
     </main>
   )
