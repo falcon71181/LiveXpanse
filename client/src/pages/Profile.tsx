@@ -1,8 +1,10 @@
 import { useContext, useState, SyntheticEvent, useEffect } from "react"
-import { FaUserCheck, FaUserAlt, FaKey } from "react-icons/fa";
+import { FaUserCheck, FaUserAlt, FaKey, FaPen } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 import { AuthContext } from "../context/auth";
 import { AuthContextType } from "../types/auth";
 import { UpdateFormData } from "../types/formData";
+import avators from "../../public/avator/avators";
 
 const Profile = () => {
   const SERVER = import.meta.env.VITE_SERVER || "http://localhost:3333";
@@ -190,7 +192,7 @@ const Profile = () => {
                   Save Changes
                 </button>
               </div>
-              <div className="p-3 col-span-2 border border-red-400">Avator Change option</div>
+              <ChangeAvator />
             </div>
           </section>
         )}
@@ -209,6 +211,32 @@ const ProfileBackground = () => {
         aria-hidden="true"
         className="absolute inset-0 bg-gradient-to-b from-[#162536]/80 to-[#162536] z-20"
       ></span>
+    </div>
+  )
+}
+
+const ChangeAvator = () => {
+  const [toggleAvatorMenu, setToggleAvatorMenu] = useState<boolean>(false);
+
+  const handleToggle = () => {
+    setToggleAvatorMenu(!toggleAvatorMenu);
+  }
+
+  return (
+    <div className="w-full p-3 pt-10 col-span-2 flex flex-col gap-10 items-center border border-red-400">
+      <img src={avators["one-piece"][0]} className="rounded-full size-36" />
+      <div onClick={handleToggle} className="px-5 py-3 rounded-2xl cursor-pointer flex items-center gap-3 bg-blue-700 hover:bg-blue-900 transition-all duration-200">
+        <FaPen />
+        <h1 className="font-semibold">Change Avator</h1>
+      </div>
+      {toggleAvatorMenu && (
+        <section className="absolute flex items-center justify-center inset-0  z-50 w-full">
+          <div className="relative p-5 h-[60vh] w-[30vw] bg-[#162536] opacity-95 rounded-xl border border-zinc-500">
+            Avator menu
+            <IoMdClose onClick={handleToggle} className="absolute right-2 top-2 text-5xl cursor-pointer hover:scale-110 transform-gpu duration-500" />
+          </div>
+        </section>
+      )}
     </div>
   )
 }
