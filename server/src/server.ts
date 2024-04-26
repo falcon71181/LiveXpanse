@@ -9,6 +9,7 @@ dotenv.config();
 // Others (routes/utils)
 import { user_routes } from "./routes/users";
 import { thread_routes } from "./routes/threads";
+import { videos_routes } from "./routes/videos";
 import { getOrigins, getMethods } from "./lib/utils";
 
 const SERVER_PORT = process.env.SERVER_PORT;
@@ -20,9 +21,9 @@ const app = express();
 const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
-  cors: {
-    origin: ORIGINS,
-  },
+    cors: {
+        origin: ORIGINS,
+    },
 });
 
 // Middlewares
@@ -31,27 +32,28 @@ app.use(express.json());
 
 // Health Check API Route
 app.get("/health", (_req, res) => {
-  res.sendStatus(200);
+    res.sendStatus(200);
 });
 
 // Other routes
 app.use("/users", user_routes);
 app.use("/threads", thread_routes);
+app.use("/videos", videos_routes);
 
 io.on("connection", (socket) => {
-  console.log(`🟢 ${socket.id} CONNECTED!`);
+    console.log(`🟢 ${socket.id} CONNECTED!`);
 
-  socket.on("sent-message", (messageData) => {
-    io.emit("received-message", messageData);
-  });
+    socket.on("sent-message", (messageData) => {
+        io.emit("received-message", messageData);
+    });
 
-  socket.on("disconnect", () => {
-    console.log(`🔴 ${socket.id} DISCONNECTED`);
-  });
+    socket.on("disconnect", () => {
+        console.log(`🔴 ${socket.id} DISCONNECTED`);
+    });
 });
 
 httpServer.listen(SERVER_PORT, () => {
-  console.log(`Server is listening on port ${SERVER_PORT}`);
+    console.log(`Server is listening on port ${SERVER_PORT}`);
 });
 
 export default app;
