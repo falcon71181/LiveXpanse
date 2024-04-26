@@ -38,7 +38,7 @@ const Forum = () => {
 
   return (
     <div>
-      <div className={`${threadPop ? 'blur-md pointer-events-none select-none' : 'blur-none'} ${!authUser ? 'mb-20' : 'mb-10'} relative pt-16 w-screen flex justify-center min-h-screen text-zinc-300 transition-all duration-100`}>
+      <div className={`${threadPop ? 'blur-md pointer-events-none select-none' : 'blur-none'} ${!authUser ? 'mb-20' : 'mb-10'} relative pt-20 w-screen flex justify-center min-h-screen text-zinc-300 transition-all duration-100`}>
         <div className="m-1 sm:m-3 md:m-6 w-full sm:w-10/12 md:w-9/12 lg:w-8/12">
           <div className='flex justify-center items-center w-fit gap-6 mx-auto'>
             <h1 className="text-4xl text-white font-bold tracking-wider overflow-hidden">

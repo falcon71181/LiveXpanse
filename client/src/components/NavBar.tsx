@@ -21,7 +21,7 @@ const NavBar = () => {
   }
 
   return (
-    <main className="px-8 bg-[#151E27] fixed h-12 w-full flex items-center justify-between z-50 border-b-[1px] border-blue-500">
+    <main className="px-8 py-3 bg-[#151E27] fixed w-full flex items-center justify-between z-50 border-b border-gray-600">
       <section className="flex items-center gap-3 z-50">
         <Link to="/" className="mr-5 flex items-center gap-3">
           <img src={Logo} className="h-8 w-8" alt="Logo"></img>
