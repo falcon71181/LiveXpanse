@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Sukuna from "../assets/bg/sukuna.jpg";
 
 type StreamData = {
     id: number;
@@ -29,7 +30,7 @@ const RootPage = () => {
 
     return (
         <main className="pt-14 w-full h-screen">
-            <img src="./bg/sukuna.jpg" className="absolute left-0 top-0 h-screen w-full object-cover opacity-10" />
+            <img src={Sukuna} className="absolute left-0 top-0 h-screen w-full object-cover opacity-10" />
             <div className="text-white">
                 <div className="my-10 mx-12">
                     <h1 className="font-bold text-4xl mb-8">Current Live Streams</h1>
