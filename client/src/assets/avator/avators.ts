@@ -18,7 +18,9 @@ import {
   zoro_1,
 } from "./one-piece/avators";
 
-const avators = {
+type AvatorRecords = Record<string, string[]>;
+
+const avators: AvatorRecords = {
   "demon-slayer": [
     giyo_0,
     zenitsu_0,

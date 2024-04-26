@@ -4,7 +4,8 @@ import { IoMdClose } from "react-icons/io";
 import { AuthContext } from "../context/auth";
 import { AuthContextType } from "../types/auth";
 import { UpdateFormData } from "../types/formData";
-import avators from "../../public/avator/avators";
+import avators from "../assets/avator/avators";
+import Sukuna from "../assets/bg/sukuna.jpg";
 
 const Profile = () => {
   const SERVER = import.meta.env.VITE_SERVER || "http://localhost:3333";
@@ -205,7 +206,7 @@ const ProfileBackground = () => {
   return (
     <div className="absolute h-[80vh] w-full blur-sm overflow-hidden">
       <span className="absolute top-4 right-0 left-0 z-10 border border-red-300">
-        <img src="./bg/sukuna.jpg" className="w-full h-full object-cover object-center brightness-[0.7]" />
+        <img src={Sukuna} className="w-full h-full object-cover object-center brightness-[0.7]" />
       </span>
       <span
         aria-hidden="true"
@@ -217,6 +218,7 @@ const ProfileBackground = () => {
 
 const ChangeAvator = () => {
   const [toggleAvatorMenu, setToggleAvatorMenu] = useState<boolean>(false);
+  const [selectedCategory, setSelectedCategory] = useState("one-piece");
 
   const handleToggle = () => {
     setToggleAvatorMenu(!toggleAvatorMenu);
@@ -231,9 +233,25 @@ const ChangeAvator = () => {
       </div>
       {toggleAvatorMenu && (
         <section className="absolute flex items-center justify-center inset-0  z-50 w-full">
-          <div className="relative p-5 h-[60vh] w-[30vw] bg-[#162536] opacity-95 rounded-xl border border-zinc-500">
-            Avator menu
-            <IoMdClose onClick={handleToggle} className="absolute right-2 top-2 text-5xl cursor-pointer hover:scale-110 transform-gpu duration-500" />
+          <div className="relative p-5 min-h-[25rem] max-h-[60rem] max-w-[30rem] flex-grow items-center bg-[#162536] opacity-95 flex flex-col gap-5 rounded-xl border border-zinc-500">
+            <IoMdClose onClick={handleToggle} className="absolute right-2 top-2 text-4xl cursor-pointer hover:scale-110 transform-gpu duration-500" />
+            <div className="mr-8 mt-5 h-1/5 flex flex-wrap items-center justify-center gap-3">
+              {Object.keys(avators).map((anime) => (
+                <span className="cursor-pointer text-zinc-300 text-sm hover:text-[#8D65DE] hover:underline hover:underline-offset-4" onClick={() => setSelectedCategory(anime)}>#{anime}</span>
+              ))}
+            </div>
+            <div className="h-4/5 p-5 flex gap-5 flex-wrap justify-center items-center border border-red-300">
+              {selectedCategory ? (
+                avators[selectedCategory as string].map((animeImg: string) => (
+                  //  TODO: make it checkbox
+                  <img src={animeImg} className="rounded-full size-16 opacity-50 hover:opacity-100 hover:scale-125 transform-gpu duration-200" />
+                ))
+              ) : (
+                Object.values(avators).flat().map((animeImg) => (
+                  <img src={animeImg} />
+                ))
+              )}
+            </div>
           </div>
         </section>
       )}

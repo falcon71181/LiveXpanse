@@ -105,7 +105,7 @@ export const Post = () => {
               placeholder={`${authUser === null ? 'Signin to reply to this thread!' : 'Enter your reply here...'}`}
               rows={6}
               onChange={e => setReplyText(e.target.value)}
-              className={`${location.hash === "#replyForm" ? "bg-[#444037]" : "bg-[#192A3E]"} 'border border-gray-500 p-2 w-full text-sm rounded-md outline-none focus:border-gray-200'`}
+              className={`${location.hash === "#replyForm" ? "bg-[#444037]" : "bg-[#192A3E]"} 'border border-gray-500 p-2 w-full text-sm rounded-md outline-none focus:border-gray-200' ${authUser === null ? "cursor-not-allowed" : "cursor-text"}`}
             />
             <button disabled={authUser === null} className='absolute right-0 bottom-0 mr-3 mb-4'>
               <IoSend className="h-5 w-5" />
