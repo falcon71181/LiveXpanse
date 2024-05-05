@@ -4,7 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { AuthContext } from "../context/auth";
 import { AuthContextType } from "../types/auth";
 import { UpdateFormData } from "../types/formData";
-import avators from "../assets/avator/avators";
+import avatars from "../assets/avator/avators";
 import Sukuna from "../assets/bg/sukuna.jpg";
 
 const Profile = () => {
@@ -217,16 +217,29 @@ const ProfileBackground = () => {
 }
 
 const ChangeAvator = () => {
+  let currentAvatar;
+  if (localStorage.getItem("avatar")) {
+    currentAvatar = localStorage.getItem("avatar");
+  } else {
+    currentAvatar = null;
+  }
   const [toggleAvatorMenu, setToggleAvatorMenu] = useState<boolean>(false);
-  const [selectedCategory, setSelectedCategory] = useState("one-piece");
+  const [selectedCategory, setSelectedCategory] = useState<string>("one-piece");
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(currentAvatar);
 
   const handleToggle = () => {
     setToggleAvatorMenu(!toggleAvatorMenu);
   }
 
+  const handleChangeAvatar = (key: number) => {
+    const localStorageFormat = `${selectedCategory},${key}`;
+    setSelectedAvatar(localStorageFormat);
+    localStorage.setItem("avatar", localStorageFormat);
+  }
+
   return (
     <div className="w-full p-3 pt-10 col-span-2 flex flex-col gap-10 items-center border border-red-400">
-      <img src={avators["one-piece"][0]} className="rounded-full size-36" />
+      <img src={selectedAvatar ? avatars[selectedAvatar.split(",")[0] as string][Number(selectedAvatar.split(",")[1])] : avatars["one-piece"][0]} className="rounded-full size-36" />
       <div onClick={handleToggle} className="px-5 py-3 rounded-2xl cursor-pointer flex items-center gap-3 bg-blue-700 hover:bg-blue-900 transition-all duration-200">
         <FaPen />
         <h1 className="font-semibold">Change Avator</h1>
@@ -236,19 +249,19 @@ const ChangeAvator = () => {
           <div className="relative p-5 min-h-[25rem] max-h-[60rem] max-w-[30rem] flex-grow items-center bg-[#162536] opacity-95 flex flex-col gap-5 rounded-xl border border-zinc-500">
             <IoMdClose onClick={handleToggle} className="absolute right-2 top-2 text-4xl cursor-pointer hover:scale-110 transform-gpu duration-500" />
             <div className="mr-8 mt-5 h-1/5 flex flex-wrap items-center justify-center gap-3">
-              {Object.keys(avators).map((anime) => (
-                <span className="cursor-pointer text-zinc-300 text-sm hover:text-[#8D65DE] hover:underline hover:underline-offset-4" onClick={() => setSelectedCategory(anime)}>#{anime}</span>
+              {Object.keys(avatars).map((anime) => (
+                <span className={`${selectedCategory === anime ? "text-[#8D65DE] underline underline-offset-2" : "text-zinc-300 hover:text-[#8D65DE] hover:underline hover:underline-offset-2"} cursor-pointer text-sm`} onClick={() => setSelectedCategory(anime)}>#{anime}</span>
               ))}
             </div>
             <div className="h-4/5 p-5 flex gap-5 flex-wrap justify-center items-center border border-red-300">
               {selectedCategory ? (
-                avators[selectedCategory as string].map((animeImg: string) => (
-                  //  TODO: make it checkbox
-                  <img src={animeImg} className="rounded-full size-16 opacity-50 hover:opacity-100 hover:scale-125 transform-gpu duration-200" />
+                avatars[selectedCategory as string].map((animeImg: string, index) => (
+                  <img key={index} src={animeImg} onClick={() => handleChangeAvatar(index)} className="rounded-full cursor-pointer size-16 opacity-50 hover:opacity-100 hover:scale-125 transform-gpu duration-200" />
                 ))
               ) : (
-                Object.values(avators).flat().map((animeImg) => (
-                  <img src={animeImg} />
+                // TODO: find a way to get specific field (anime name)
+                Object.values(avatars).flat().map((animeImg: string, index) => (
+                  <img key={index} src={animeImg} />
                 ))
               )}
             </div>

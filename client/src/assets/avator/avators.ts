@@ -20,7 +20,7 @@ import {
 
 type AvatorRecords = Record<string, string[]>;
 
-const avators: AvatorRecords = {
+const avatars: AvatorRecords = {
   "demon-slayer": [
     giyo_0,
     zenitsu_0,
@@ -42,4 +42,4 @@ const avators: AvatorRecords = {
   ]
 }
 
-export default avators;
+export default avatars;
