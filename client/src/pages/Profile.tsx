@@ -41,6 +41,11 @@ const Profile = () => {
       };
       const token = localStorage.getItem('token');
 
+      if (!currentPassword) {
+        setError("Enter your current password to update profile.");
+        return;
+      }
+
       const response = await fetch(`${SERVER}/users/update`, {
         method: "POST",
         headers: {
@@ -104,10 +109,10 @@ const Profile = () => {
   }, [SERVER]);
 
   return (
-    <main className="relative w-full min-h-[90vh] pt-10 text-zinc-300 flex justify-center overflow-y-auto border border-red-300">
+    <main className="relative w-full min-h-[90vh] pt-10 text-zinc-300 flex justify-center overflow-y-auto">
       <ProfileBackground />
-      <div className="absolute mt-10 w-9/12 text-zinc-300 z-30 border border-grny">
-        <div className="m-3 h-64 text-7xl font-semibold tracking-wider text-neutral-100 flex flex-col gap-4 justify-center items-center border border-red-300">
+      <div className="absolute mt-10 w-9/12 text-zinc-300 z-30">
+        <div className="m-3 h-64 text-7xl font-semibold tracking-wider text-neutral-100 flex flex-col gap-4 justify-center items-center">
           <h1>Hi! I'm</h1>
           <h1>{localStorage.getItem("username")}</h1>
           <div className="mt-5 py-1.5 px-4 rounded-2xl bg-[#0365FF] flex tracking-normal gap-2 items-center">
@@ -116,13 +121,13 @@ const Profile = () => {
           </div>
         </div>
         {authUser && (
-          <section className="my-3 mx-36 flex flex-col border border-cyan-300">
-            <div className="text-neutral-100 text-4xl flex items-center gap-4">
+          <section className="my-3 py-8 px-5 mx-36 flex flex-col border border-gray-600">
+            <div className="px-5 py-3 text-neutral-100 text-4xl flex items-center gap-4">
               <FaUserAlt />
               <h1 className="font-semibold pb-2">Edit Profile</h1>
             </div>
             <div className="px-5 grid grid-cols-7 gap-2">
-              <div className="px-5 py-2 col-span-5 flex flex-col gap-2 border border-green-300">
+              <div className="px-5 py-2 col-span-5 flex flex-col gap-2">
                 <h1 className="text-start text-xs text-gray-400 uppercase">Email address</h1>
                 <input
                   type="email"
@@ -183,7 +188,7 @@ const Profile = () => {
                   </div>
                 )}
                 {error && (
-                  <div className="text-sm text-red-300">error</div>
+                  <div className="text-sm text-red-300">{error}</div>
                 )}
                 <button
                   type="button"
@@ -205,7 +210,7 @@ const Profile = () => {
 const ProfileBackground = () => {
   return (
     <div className="absolute h-[80vh] w-full blur-sm overflow-hidden">
-      <span className="absolute top-4 right-0 left-0 z-10 border border-red-300">
+      <span className="absolute top-4 right-0 left-0 z-10">
         <img src={Sukuna} className="w-full h-full object-cover object-center brightness-[0.7]" />
       </span>
       <span
@@ -238,7 +243,7 @@ const ChangeAvator = () => {
   }
 
   return (
-    <div className="w-full p-3 pt-10 col-span-2 flex flex-col gap-10 items-center border border-red-400">
+    <div className="w-full p-3 pt-10 col-span-2 flex flex-col gap-10 items-center">
       <img src={selectedAvatar ? avatars[selectedAvatar.split(",")[0] as string][Number(selectedAvatar.split(",")[1])] : avatars["one-piece"][0]} className="rounded-full size-36" />
       <div onClick={handleToggle} className="px-5 py-3 rounded-2xl cursor-pointer flex items-center gap-3 bg-blue-700 hover:bg-blue-900 transition-all duration-200">
         <FaPen />
