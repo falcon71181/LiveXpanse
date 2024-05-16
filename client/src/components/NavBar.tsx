@@ -5,9 +5,10 @@ import { FaRegUser } from "react-icons/fa";
 import { FaClipboardQuestion } from "react-icons/fa6";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { MdForum } from "react-icons/md";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/auth";
 import { AuthContextType } from "../types/auth";
+import avatars from "../assets/avator/avators";
 
 const NavBar = () => {
   const { authUser, setAuthUser } = useContext(AuthContext) as AuthContextType;
@@ -19,6 +20,27 @@ const NavBar = () => {
     setAuthUser(null);
     navigate("/");
   }
+
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(() => {
+    const storedAvatar = localStorage.getItem("avatar");
+    return storedAvatar !== null ? storedAvatar : null;
+  });
+
+  // TODO: try to make a context
+  // XXX: not working using event listeners
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === "avatar") {
+        setSelectedAvatar(event.newValue);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   return (
     <main className="px-8 py-3 bg-[#151E27] fixed w-full flex items-center justify-between z-50 border-b border-gray-600">
@@ -92,10 +114,10 @@ const NavBar = () => {
             to="/profile"
             className="text-[#efeff1] hover:text-[#a970ff] flex items-center gap-2"
           >
+            <img src={selectedAvatar ? avatars[selectedAvatar.split(",")[0] as string][Number(selectedAvatar.split(",")[1])] : avatars["one-piece"][0]} className="rounded-full size-8" />
             <div className="font-bold tracking-wider">
               {localStorage.getItem("username")}
             </div>
-            <FaRegUser />
           </Link>
           <button onClick={logoutUser} className='border border-red-300 px-2 py-1 text-sm rounded-md text-white hover:bg-red-950'>
             Logout
