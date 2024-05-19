@@ -1,9 +1,11 @@
-import { createUser as createUserTable } from "../database/users";
-import { pool } from "../database/db";
+import type { RequestHandler, Request, Response } from "express";
 import bcrypt, { compare } from "bcrypt";
 import { createToken } from "../lib/token";
-import type { RequestHandler, Request, Response } from "express";
+
 import type { QueryResult } from "pg";
+import { pool } from "../database/db";
+import { createUser as createUserTable } from "../database/users";
+import { createStreamTable } from "../database/streams";
 
 // send user`s data
 const getProfileData: RequestHandler = async (req: Request, res: Response) => {
@@ -246,10 +248,21 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
     const hashedPassword: string = await bcrypt.hash(password, 12);
 
     // Insert user into database
-    await pool.query(
-      "INSERT INTO users (registered_on, user_username, user_email, user_password) VALUES ($1, $2, $3, $4)",
-      [Date.now(), username, email, hashedPassword],
-    );
+    const result: QueryResult<{ user_id: string }> = await pool.query(`
+      INSERT INTO users (registered_on, user_username, user_email, user_password)
+      VALUES ($1, $2, $3, $4)
+      RETURNING user_id
+    `, [Date.now(), username, email, hashedPassword])
+
+    const user_id = result.rows[0].user_id;
+
+    // Create stream for that user
+    await createStreamTable();
+
+    await pool.query(`
+      INSERT INTO streams (name, user_id)
+      VALUES ($1, $2)
+    `, [`${username}'s stream`, user_id]);
 
     //  create jwt token
     const token: string = createToken(email);
