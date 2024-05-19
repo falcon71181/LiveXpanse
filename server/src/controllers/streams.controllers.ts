@@ -1,0 +1,82 @@
+import { Request, Response } from "express";
+import { createUser } from "../database/users";
+import { createStreamTable } from "../database/streams";
+import { pool } from "../database/db";
+import { QueryResult } from "pg";
+
+// NOTE: The below two controllers are very same in functionality
+// TODO: Build a single function to use for both
+
+const getStream = async (req: Request, res: Response) => {
+    const email = (req as Request & { email?: string }).email;
+
+    try {
+        await createUser();
+        await createStreamTable();
+
+        const userResult: QueryResult<{ user_id: string }> = await pool.query(`
+            SELECT user_id from users
+            WHERE user_email = $1
+        `, [email]);
+
+        const user_id = userResult.rows[0].user_id;
+
+        if (!user_id) {
+            throw new Error('User doesn\'t exist.');
+        }
+
+        const streamResult = await pool.query(`
+            SELECT * FROM streams
+            WHERE user_id = $1
+        `, [user_id])
+
+        const stream = streamResult.rows[0];
+
+        if (!stream) {
+            throw new Error('Stream doesn\'t exist.');
+        }
+
+        res.json(stream);
+    } catch (error) {
+        console.error('Error getting stream from userId:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+const getStreamByUserId = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+
+    try {
+        await createUser();
+        await createStreamTable();
+
+        const userResult: QueryResult<{ user_id: string }> = await pool.query(`
+            SELECT user_id from users
+            WHERE user_id = $1
+        `, [userId]);
+
+        const user_id = userResult.rows[0].user_id;
+
+        if (!user_id) {
+            throw new Error('User doesn\'t exist.');
+        }
+
+        const streamResult = await pool.query(`
+            SELECT * FROM streams
+            WHERE user_id = $1
+        `, [user_id])
+
+        const stream = streamResult.rows[0];
+
+        if (!stream) {
+            throw new Error('Stream doesn\'t exist.');
+        }
+
+        res.json(stream);
+    } catch (error) {
+        console.error('Error getting stream from userId:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+export { getStream, getStreamByUserId };
