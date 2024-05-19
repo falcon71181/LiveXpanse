@@ -52,7 +52,7 @@ io.on("connection", (socket) => {
     });
 });
 
-httpServer.listen(SERVER_PORT, () => {
+httpServer.listen(SERVER_PORT, async () => {
     console.log(`Server is listening on port ${SERVER_PORT}`);
 });
 
