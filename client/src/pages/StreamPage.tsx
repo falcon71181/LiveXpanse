@@ -1,14 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/auth";
 import { AuthContextType } from "../types/auth";
+import { useNavigate } from "react-router-dom";
 
 const StreamPage = () => {
     const { authUser } = useContext(AuthContext) as AuthContextType;
     const token = authUser?.token;
 
+    const navigate = useNavigate();
+
     const [streamUrl, setStreamUrl] = useState('');
     const [streamKey, setStreamKey] = useState('');
     const [showKey, setShowKey] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const fetchStream = async () => {
@@ -22,8 +26,6 @@ const StreamPage = () => {
 
                 const data = await res.json();
 
-                console.log(data);
-
                 if (res.ok) {
                     setStreamUrl(data.stream_url);
                     setStreamKey(data.stream_key);
@@ -36,8 +38,28 @@ const StreamPage = () => {
         fetchStream();
     }, [token])
 
-    const generateConnection = () => {
-        console.log("Generate connection");
+    const generateConnection = async () => {
+        setIsLoading(true)
+
+        try {
+            const res = await fetch('http://localhost:3333/streams/ingress', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.ok) {
+                navigate(0)
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -49,9 +71,10 @@ const StreamPage = () => {
                         <h1 className="font-semibold text-xl">URL and Keys</h1>
                         <button
                             onClick={generateConnection}
-                            className="px-3 py-2 inline-flex justify-center items-center border border-gray-500 rounded-md hover:bg-gray-700"
+                            disabled={isLoading}
+                            className={`${isLoading ? 'cursor-wait' : 'cursor-pointer'} px-3 py-2 inline-flex justify-center items-center border border-gray-500 rounded-md hover:bg-gray-700`}
                         >
-                            Generate Connection
+                            {isLoading ? 'Generating...' : 'Generate Connection'}
                         </button>
                     </div>
                     <div className="w-1/2 flex flex-col gap-3">
