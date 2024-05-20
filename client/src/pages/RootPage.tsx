@@ -77,7 +77,12 @@ const RootPage = () => {
                     </div>
                 </div>
                 <div className="my-10 mx-12">
-                    <h1 className="font-bold text-3xl mb-8">Streamers</h1>
+                    <div className="flex items-center gap-5 mb-8">
+                        <h1 className="font-bold text-3xl">Streamers</h1>
+                        <Link to='/stream/key' className='z-50 px-3 py-2 inline-flex justify-center items-center border border-gray-500 rounded-md hover:bg-gray-700'>
+                            Your Keys
+                        </Link>
+                    </div>
                     {users && (
                         <div className="grid grid-cols-5 gap-5">
                             {users.map(user => (
