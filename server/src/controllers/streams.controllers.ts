@@ -3,6 +3,7 @@ import { createUser } from "../database/users";
 import { createStreamTable } from "../database/streams";
 import { pool } from "../database/db";
 import { QueryResult } from "pg";
+import { createIngress } from "../lib/ingress";
 
 // NOTE: The below two controllers are very same in functionality
 // TODO: Build a single function to use for both
@@ -38,7 +39,7 @@ const getStream = async (req: Request, res: Response) => {
 
         res.json(stream);
     } catch (error) {
-        console.error('Error getting stream from userId:', error);
+        console.error('Error getting stream for current user', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
@@ -79,4 +80,28 @@ const getStreamByUserId = async (req: Request, res: Response) => {
     }
 }
 
-export { getStream, getStreamByUserId };
+const getIngress = async (req: Request, res: Response) => {
+    const email = (req as Request & { email?: string }).email;
+
+    try {
+        await createUser();
+
+        const result: QueryResult<{
+            user_id: string,
+            user_username: string
+        }> = await pool.query(`
+            SELECT user_id, user_username FROM users
+            WHERE user_email = $1
+        `, [email])
+
+        const user = result.rows[0];
+        const ingress = await createIngress(user);
+
+        res.json(ingress);
+    } catch (error) {
+        console.error('Error getting ingress:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+export { getStream, getStreamByUserId, getIngress };

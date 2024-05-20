@@ -14,7 +14,9 @@
     "docker:stop": "docker stop livexpanse-client-con"
   },
   "dependencies": {
+    "@livekit/components-react": "^2.2.1",
     "@tailwindcss/line-clamp": "^0.4.4",
+    "livekit-client": "^2.1.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.1",
