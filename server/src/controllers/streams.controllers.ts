@@ -44,6 +44,10 @@ const getStream = async (req: Request, res: Response) => {
     }
 }
 
+const getSpecificStream = async (req: Request, res: Response) => {
+    const { streamId } = req.params;
+}
+
 const getStreamByUserId = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
@@ -104,4 +108,4 @@ const getIngress = async (req: Request, res: Response) => {
     }
 }
 
-export { getStream, getStreamByUserId, getIngress };
+export { getStream, getStreamByUserId, getIngress, getSpecificStream };
