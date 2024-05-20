@@ -25,6 +25,7 @@ const StreamKeyPage = () => {
                 });
 
                 const data = await res.json();
+                console.log(data);
 
                 if (res.ok) {
                     setStreamUrl(data.stream_url);

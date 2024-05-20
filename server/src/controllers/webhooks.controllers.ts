@@ -8,7 +8,7 @@ const receiver = new WebhookReceiver(
 )
 
 const livekitEventWebhook = async (req: Request, _res: Response) => {
-    const event = await receiver.receive(req.body, req.get('Authorization'))
+    const event = receiver.receive(req.body, req.get('Authorization'))
     console.log('WEBHOOK', event.event);
 
     try {

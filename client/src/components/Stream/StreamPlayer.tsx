@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../../context/auth"
 import { AuthContextType } from "../../types/auth"
 import { JwtPayload, jwtDecode } from "jwt-decode"
+import { LiveKitRoom } from "@livekit/components-react"
+import Video from "./Video"
 
 type StreamData = {
     created_on: string
@@ -77,12 +79,22 @@ const StreamPlayer = ({ user, stream }: StreamPlayerProps) => {
         createToken();
     }, [])
 
+    console.log({ token, name, identity });
+
     return (
         <>
             {(!token || !name || !identity) ? (
-                <div>Cannot wathc the stream</div>
+                <div>Cannot watch the stream</div>
             ) : (
-                <div>Testing</div>
+                <LiveKitRoom
+                    token={token}
+                    serverUrl={import.meta.env.VITE_LIVEKIT_WS_URL}
+                    className="grid grid-cols-1 lg:gap-y-0 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 h-full"
+                >
+                    <div className="space-y-4 col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto pb-10">
+                        <Video hostName={user.username} hostIdentity={user.id} />
+                    </div>
+                </LiveKitRoom>
             )}
         </>
     )
