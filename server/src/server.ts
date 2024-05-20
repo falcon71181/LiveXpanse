@@ -12,6 +12,7 @@ import { thread_routes } from "./routes/threads";
 import { videos_routes } from "./routes/videos";
 import { getOrigins, getMethods } from "./lib/utils";
 import { stream_routes } from "./routes/streams";
+import { webhook_routes } from "./routes/webhooks";
 
 const SERVER_PORT = process.env.SERVER_PORT;
 const ORIGINS = getOrigins();
@@ -41,6 +42,7 @@ app.use("/users", user_routes);
 app.use("/threads", thread_routes);
 app.use("/videos", videos_routes);
 app.use('/streams', stream_routes);
+app.use('/webhooks', webhook_routes);
 
 io.on("connection", (socket) => {
     console.log(`🟢 ${socket.id} CONNECTED!`);

@@ -4,8 +4,31 @@ import { createToken } from "../lib/token";
 
 import type { QueryResult } from "pg";
 import { pool } from "../database/db";
-import { createUser as createUserTable } from "../database/users";
+import { createUser, createUser as createUserTable } from "../database/users";
 import { createStreamTable } from "../database/streams";
+
+const getAllUsers = async (_req: Request, res: Response) => {
+    try {
+        await createUser();
+
+        const result: QueryResult<{
+            user_id: number;
+            user_email: string;
+            user_username: string;
+            is_live: boolean;
+        }> = await pool.query(`
+            SELECT users.user_id, users.user_username, users.user_email, streams.is_live
+            FROM users
+            JOIN streams ON users.user_id = streams.user_id
+        `);
+
+        const users = result.rows;
+        res.json({ users })
+    } catch (error) {
+        console.error('Error occured getting all users:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
 
 // send user`s data
 const getProfileData: RequestHandler = async (req: Request, res: Response) => {
@@ -281,4 +304,4 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
-export { getProfileData, updateUserProfile, loginUser, registerUser };
+export { getProfileData, updateUserProfile, loginUser, registerUser, getAllUsers };

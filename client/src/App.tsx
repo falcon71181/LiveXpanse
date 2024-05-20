@@ -8,6 +8,7 @@ import Forum from "./pages/Forum";
 import Profile from "./pages/Profile";
 import { Post } from "./pages/Post";
 import { Route, Routes } from "react-router-dom";
+import StreamKeyPage from "./pages/StreamKeyPage";
 import StreamPage from "./pages/StreamPage";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <Route path="/community/board" element={<Forum />} />
       <Route path="/community/post/:threadId" element={<Post />} />
       <Route path="/stream" element={<StreamPage />} />
+      <Route path="/stream/key" element={<StreamKeyPage />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
