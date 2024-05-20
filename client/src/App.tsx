@@ -19,8 +19,8 @@ function App() {
       <Route path="/rules" element={<Rules />} />
       <Route path="/community/board" element={<Forum />} />
       <Route path="/community/post/:threadId" element={<Post />} />
-      <Route path="/stream" element={<StreamPage />} />
       <Route path="/stream/key" element={<StreamKeyPage />} />
+      <Route path="/stream/:username" element={<StreamPage />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
