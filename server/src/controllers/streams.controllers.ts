@@ -4,6 +4,7 @@ import { createStreamTable } from "../database/streams";
 import { pool } from "../database/db";
 import { QueryResult } from "pg";
 import { createIngress } from "../lib/ingress";
+import { AccessToken } from "livekit-server-sdk";
 
 // NOTE: The below two controllers are very same in functionality
 // TODO: Build a single function to use for both
@@ -44,12 +45,8 @@ const getStream = async (req: Request, res: Response) => {
     }
 }
 
-const getSpecificStream = async (req: Request, res: Response) => {
-    const { streamId } = req.params;
-}
-
-const getStreamByUserId = async (req: Request, res: Response) => {
-    const { userId } = req.params;
+const getStreamByUsername = async (req: Request, res: Response) => {
+    const { username } = req.params;
 
     try {
         await createUser();
@@ -57,8 +54,8 @@ const getStreamByUserId = async (req: Request, res: Response) => {
 
         const userResult: QueryResult<{ user_id: string }> = await pool.query(`
             SELECT user_id from users
-            WHERE user_id = $1
-        `, [userId]);
+            WHERE user_username = $1
+        `, [username]);
 
         const user_id = userResult.rows[0].user_id;
 
@@ -82,6 +79,31 @@ const getStreamByUserId = async (req: Request, res: Response) => {
         console.error('Error getting stream from userId:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
+}
+
+const createViewerToken = async (req: Request, res: Response) => {
+    const { host, current } = req.body;
+    console.log(host, current);
+
+    const isHost = host === current;
+    const token = new AccessToken(
+        process.env.LIVEKIT_API_KEY!,
+        process.env.LIVEKIT_API_SECRET!,
+        {
+            identity: isHost ? `host-${current}` : current,
+            name: current
+        }
+    )
+
+    token.addGrant({
+        room: `${host.id}`,
+        roomJoin: true,
+        canPublish: true,
+        canPublishData: true
+    })
+
+    const response = await Promise.resolve(token.toJwt());
+    res.json(response);
 }
 
 const getIngress = async (req: Request, res: Response) => {
@@ -108,4 +130,4 @@ const getIngress = async (req: Request, res: Response) => {
     }
 }
 
-export { getStream, getStreamByUserId, getIngress, getSpecificStream };
+export { getStream, getStreamByUsername, getIngress, createViewerToken };

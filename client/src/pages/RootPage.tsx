@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import Sukuna from "../assets/bg/sukuna.jpg";
 import { AuthContext } from "../context/auth";
 import { AuthContextType } from "../types/auth";
+import { Link } from "react-router-dom";
 
 type StreamData = {
     id: number;
@@ -80,10 +81,12 @@ const RootPage = () => {
                     {users && (
                         <div className="grid grid-cols-5 gap-5">
                             {users.map(user => (
-                                <div key={user.user_id} className="p-2 rounded-md border border-gray-500 flex justify-between">
-                                    <p>{user.user_username}</p>
-                                    {user.is_live && <p className="text-green-500">LIVE</p>}
-                                    {!user.is_live && <p className="text-red-500">NOT LIVE</p>}
+                                <div key={user.user_id} className="z-50">
+                                    <Link to={`/stream/${user.user_username}`} className="p-2 rounded-md border border-gray-500 flex justify-between">
+                                        <p>{user.user_username}</p>
+                                        {user.is_live && <p className="text-green-500">LIVE</p>}
+                                        {!user.is_live && <p className="text-red-500">NOT LIVE</p>}
+                                    </Link>
                                 </div>
                             ))}
                         </div>

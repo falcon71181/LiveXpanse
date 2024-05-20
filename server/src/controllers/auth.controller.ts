@@ -48,6 +48,7 @@ const getProfileData: RequestHandler = async (req: Request, res: Response) => {
     const user_details = userInfo.rows[0];
 
     res.status(200).send({
+      id: user_details.user_id,
       username: user_details.user_username,
       email: user_details.user_email,
       joinedOn: user_details.registered_on,
