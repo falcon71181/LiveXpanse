@@ -24,9 +24,9 @@ const Video = ({ hostName, hostIdentity }: VideoProps) => {
     let content;
 
     if (!participant && connectionState === ConnectionState.Connected) {
-        content = <p>Host is offline</p>
+        content = <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-500 text-2xl">Host is offline</p>
     } else if (!participant && track.length === 0) {
-        content = <p>Loading...</p>
+        content = <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-500 text-2xl">Loading...</p>
     } else {
         if (participant) {
             content = <LiveVideo participant={participant} />
@@ -34,7 +34,7 @@ const Video = ({ hostName, hostIdentity }: VideoProps) => {
     }
 
     return (
-        <div className="aspect-video border-b group relative">
+        <div className="bg-gray-900 aspect-video border border-gray-600 rounded-md group relative">
             {content}
         </div>
     )
