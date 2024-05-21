@@ -68,7 +68,7 @@ const StreamPage = () => {
         <div className='pt-14 w-full h-screen'>
             {stream && user && (
                 <div className="my-10 mx-12">
-                    <h1 className="font-bold text-4xl mb-8">{stream?.name}</h1>
+                    <h1 className="font-bold text-4xl mb-8">LiveXpanse Streaming</h1>
                     <StreamPlayer
                         user={user}
                         stream={stream}
