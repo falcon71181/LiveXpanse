@@ -4,6 +4,7 @@ import { AuthContextType } from "../../types/auth"
 import { JwtPayload, jwtDecode } from "jwt-decode"
 import { LiveKitRoom } from "@livekit/components-react"
 import Video from "./Video"
+import ChatSection from "./ChatSection"
 
 type StreamData = {
     created_on: string
@@ -79,8 +80,6 @@ const StreamPlayer = ({ user, stream }: StreamPlayerProps) => {
         createToken();
     }, [])
 
-    console.log({ token, name, identity });
-
     return (
         <>
             {(!token || !name || !identity) ? (
@@ -89,13 +88,13 @@ const StreamPlayer = ({ user, stream }: StreamPlayerProps) => {
                 <LiveKitRoom
                     token={token}
                     serverUrl={import.meta.env.VITE_LIVEKIT_WS_URL}
-                    className="grid grid-cols-1 gap-x-5 lg:gap-y-0 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 h-full"
+                    className="grid grid-cols-1 gap-x-5 gap-y-4 lg:gap-y-0 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 h-full"
                 >
                     <div className="space-y-4 col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto">
                         <Video hostName={user.username} hostIdentity={user.id} />
                         <div className="text-gray-500">You're watching <span className="font-bold text-gray-300">{stream.name}</span>. Report any misuse of the service and send us any feedback if needed. Thank you!</div>
                     </div>
-                    <div className="border border-gray-600 rounded-md px-4 py-2 text-xl font-semibold">Chat Section</div>
+                    <ChatSection />
                 </LiveKitRoom>
             )}
         </>
