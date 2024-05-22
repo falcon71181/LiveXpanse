@@ -258,10 +258,10 @@ const ChangeAvator = () => {
                 <span className={`${selectedCategory === anime ? "text-[#8D65DE] underline underline-offset-2" : "text-zinc-300 hover:text-[#8D65DE] hover:underline hover:underline-offset-2"} cursor-pointer text-sm`} onClick={() => setSelectedCategory(anime)}>#{anime}</span>
               ))}
             </div>
-            <div className="h-4/5 p-5 flex gap-5 flex-wrap justify-center items-center border border-red-300">
+            <div className="h-4/5 p-5 flex gap-5 flex-wrap justify-center items-center">
               {selectedCategory ? (
                 avatars[selectedCategory as string].map((animeImg: string, index) => (
-                  <img key={index} src={animeImg} onClick={() => handleChangeAvatar(index)} className="rounded-full cursor-pointer size-16 opacity-50 hover:opacity-100 hover:scale-125 transform-gpu duration-200" />
+                  <img key={index} src={animeImg} onClick={() => handleChangeAvatar(index)} className={`${Number(selectedAvatar?.split(",")[1]) === index && selectedCategory === selectedAvatar?.split(",")[0] ? 'scale-125 opacity-100' : 'opacity-50 hover:opacity-100 hover:scale-125'} rounded-full cursor-pointer size-16 transform-gpu duration-200`} />
                 ))
               ) : (
                 // TODO: find a way to get specific field (anime name)

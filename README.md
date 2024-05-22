@@ -99,6 +99,7 @@ npm dev
 3. Access the client interface at http://localhost:5173.
 
 ## 🍄Technologies Used
+- postgreSQL
 - TypeScript
 - Tailwind CSS
 - Express
@@ -107,6 +108,14 @@ npm dev
 - JSON Web Tokens (JWT) for authentication
 - Bcrypt
 - LiveKit for streaming
+
+## 🤖 References
+- [LiveKit](https://livekit.io/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [Vite](https://vitejs.dev/)
+- [postgreSQL](https://www.postgresql.org/)
+- [Express.js](https://expressjs.com/)
+- [SocketIO](https://socket.io/)
 
 ## 💖  Contribution 🤝
 Contributions to enhance the functionality or improve the codebase are welcome! Feel free to open issues or pull requests.

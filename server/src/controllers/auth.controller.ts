@@ -8,26 +8,26 @@ import { createUser, createUser as createUserTable } from "../database/users";
 import { createStreamTable } from "../database/streams";
 
 const getAllUsers = async (_req: Request, res: Response) => {
-    try {
-        await createUser();
+  try {
+    await createUser();
 
-        const result: QueryResult<{
-            user_id: number;
-            user_email: string;
-            user_username: string;
-            is_live: boolean;
-        }> = await pool.query(`
+    const result: QueryResult<{
+      user_id: number;
+      user_email: string;
+      user_username: string;
+      is_live: boolean;
+    }> = await pool.query(`
             SELECT users.user_id, users.user_username, users.user_email, streams.is_live
             FROM users
             JOIN streams ON users.user_id = streams.user_id
         `);
 
-        const users = result.rows;
-        res.json({ users })
-    } catch (error) {
-        console.error('Error occured getting all users:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
+    const users = result.rows;
+    res.json({ users })
+  } catch (error) {
+    console.error('Error occured getting all users:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 }
 
 // send user`s data
@@ -240,11 +240,14 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
     return res.status(400).send({ error });
   }
 
+  // Validate password 
+  if (!validatePassword(password as string) || (password.length < 8 || password.length > 50)) {
+    return res.status(403).send({ error: "Password should contains atleast one (special character, uppercase character, lowercase character, number) & character limit is: [8, 50]" })
+  }
+
   // Validate email format
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    const error = "Invalid email format.";
-    return res.status(400).send({ error });
+  if (!validateEmail(email as string)) {
+    return res.status(403).send({ error: "Invalid email format." });
   }
 
   // Check if passwords match
@@ -303,6 +306,22 @@ const registerUser: RequestHandler = async (req: Request, res: Response) => {
     console.error("Error registering user:", error);
     res.status(500).send({ error: "Internal server error." });
   }
+};
+
+// Validate password
+function validatePassword(pw: string): boolean {
+  return /[A-Z]/.test(pw) &&
+    /[a-z]/.test(pw) &&
+    /[0-9]/.test(pw) &&
+    /[\W_]/.test(pw) &&
+    pw.length > 4;
+}
+
+// Validate email address
+const validateEmail = (email: string): boolean => {
+  const re =
+    /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+  return re.test(String(email).toLowerCase());
 };
 
 export { getProfileData, updateUserProfile, loginUser, registerUser, getAllUsers };
