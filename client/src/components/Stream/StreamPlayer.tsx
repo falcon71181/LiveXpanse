@@ -5,6 +5,7 @@ import { JwtPayload, jwtDecode } from "jwt-decode"
 import { LiveKitRoom } from "@livekit/components-react"
 import Video from "./Video"
 import ChatSection from "./ChatSection"
+import { Link } from "react-router-dom"
 
 type StreamData = {
     created_on: string
@@ -35,8 +36,6 @@ type StreamPlayerProps = {
 }
 
 const StreamPlayer = ({ user, stream }: StreamPlayerProps) => {
-    console.log({ user, stream });
-
     const { authUser } = useContext(AuthContext) as AuthContextType;
 
     const [token, setToken] = useState('');
@@ -83,7 +82,12 @@ const StreamPlayer = ({ user, stream }: StreamPlayerProps) => {
     return (
         <>
             {(!token || !name || !identity) ? (
-                <div className="text-red-500 text-lg">Cannot watch the stream</div>
+                <>
+                    <div>
+                        <span className="text-red-500 text-lg">Cannot watch the stream!</span>{' '}
+                        Try to <Link to='/login' className="underline font-bold">login</Link> first
+                    </div>
+                </>
             ) : (
                 <LiveKitRoom
                     token={token}

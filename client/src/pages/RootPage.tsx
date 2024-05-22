@@ -57,11 +57,11 @@ const RootPage = () => {
     }, [])
 
     return (
-        <main className={`${!authUser && 'mb-14'} pt-14 w-full h-screen`}>
-            <img src={Sukuna} className="absolute left-0 top-0 h-screen w-full object-cover opacity-10" />
+        <main className={`${!authUser && 'mb-24'} pt-14 w-full h-screen mb-20`}>
+            <img src={Sukuna} className="absolute left-0 top-0 h-full w-full object-cover opacity-10" />
             <div className="text-white">
                 <div className="my-10 mx-12">
-                    <h1 className="font-bold text-4xl mb-8">Current Live Streams</h1>
+                    <h1 className="font-bold text-4xl mb-8">Previous Live Streams</h1>
                     <div className="grid grid-cols-4 gap-y-3 gap-x-5">
                         {streamsData.map(stream => (
                             <div key={stream.id} className="z-50 bg-transparent cursor-pointer border border-gray-500 rounded-lg p-3 bg-gradient-to-r from-gray-800">
@@ -78,7 +78,7 @@ const RootPage = () => {
                 </div>
                 <div className="my-10 mx-12">
                     <div className="flex items-center gap-5 mb-8">
-                        <h1 className="font-bold text-3xl">Streamers</h1>
+                        <h1 className="font-bold text-3xl">Current Streamers</h1>
                         <Link to='/stream/key' className='z-50 px-3 py-2 inline-flex justify-center items-center border border-gray-500 rounded-md hover:bg-gray-700'>
                             Your Keys
                         </Link>
@@ -88,9 +88,12 @@ const RootPage = () => {
                             {users.map(user => (
                                 <div key={user.user_id} className="z-50">
                                     <Link to={`/stream/${user.user_username}`} className="p-2 rounded-md border border-gray-500 flex justify-between">
-                                        <p>{user.user_username}</p>
-                                        {user.is_live && <p className="text-green-500">LIVE</p>}
-                                        {!user.is_live && <p className="text-red-500">NOT LIVE</p>}
+                                        <div className="flex flex-col">
+                                            <p className="font-bold text-lg">{user.user_username}</p>
+                                            <p className="text-purple-500/60 text-sm">{user.user_email}</p>
+                                        </div>
+                                        {user.is_live && <p className="text-red-500 font-bold">Live</p>}
+                                        {!user.is_live && <p className="text-gray-500 font-bold">Inactive</p>}
                                     </Link>
                                 </div>
                             ))}
