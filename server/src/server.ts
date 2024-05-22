@@ -51,6 +51,10 @@ io.on("connection", (socket) => {
         io.emit("received-message", messageData);
     });
 
+    socket.on('send-stream-message', (messageBlock) => {
+        io.emit("receive-stream-message", messageBlock);
+    })
+
     socket.on("disconnect", () => {
         console.log(`🔴 ${socket.id} DISCONNECTED`);
     });
