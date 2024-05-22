@@ -62,8 +62,6 @@ const StreamPage = () => {
         fetchUser();
     }, [username])
 
-    console.log({ stream });
-
     return (
         <div className='pt-14 w-full h-screen'>
             {stream && user && (

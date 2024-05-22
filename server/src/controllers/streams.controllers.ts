@@ -83,27 +83,35 @@ const getStreamByUsername = async (req: Request, res: Response) => {
 
 const createViewerToken = async (req: Request, res: Response) => {
     const { host, current } = req.body;
-    console.log(host, current);
 
-    const isHost = host === current;
-    const token = new AccessToken(
-        process.env.LIVEKIT_API_KEY!,
-        process.env.LIVEKIT_API_SECRET!,
-        {
-            identity: isHost ? `host-${current}` : current,
-            name: current
+    try {
+        const isHost = host === current;
+        const token = new AccessToken(
+            process.env.LIVEKIT_API_KEY!,
+            process.env.LIVEKIT_API_SECRET!,
+            {
+                identity: isHost ? `host-${current}` : current,
+                name: current
+            }
+        )
+
+        token.addGrant({
+            room: `${host.id}`,
+            roomJoin: true,
+            canPublish: true,
+            canPublishData: true
+        })
+
+        const response = await Promise.resolve(token.toJwt());
+        res.json(response);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error creating viewer token:', error.message);
         }
-    )
 
-    token.addGrant({
-        room: `${host.id}`,
-        roomJoin: true,
-        canPublish: true,
-        canPublishData: true
-    })
+        res.status(500).json({ error: 'Internal server error' });
+    }
 
-    const response = await Promise.resolve(token.toJwt());
-    res.json(response);
 }
 
 const getIngress = async (req: Request, res: Response) => {

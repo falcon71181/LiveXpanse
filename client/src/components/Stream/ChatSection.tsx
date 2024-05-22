@@ -75,7 +75,7 @@ const ChatSection = () => {
             {isConnected && (
                 <div className="flex-grow flex flex-col gap-2 overflow-y-auto h-[20rem] my-2" >
                     {messageLogs.map((message, index) => (
-                        <div key={`${index}-${message.user}`} className="flex flex-col border px-2 py-1 rounded-md bg-purple-900/10 border-gray-500" ref={messageRef}>
+                        <div key={`${index}-${message.user}`} className="flex flex-col border px-2 py-1 rounded-md  bg-purple-900/10 border-gray-500" ref={messageRef}>
                             <p className="text-xs text-gray-500">{message.user}</p>
                             <p>{message.data}</p>
                         </div>
